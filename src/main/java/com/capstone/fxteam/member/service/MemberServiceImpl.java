@@ -108,6 +108,13 @@ public class MemberServiceImpl implements MemberService {
         redisUtils.setDataExpire(resolveToken, "logout", jwtUtils.getExpiration(resolveToken));
     }
 
+    @Override
+    public MemberDto.FindLoginIdResponseDto findLoginId(MemberDto.FindLoginIdRequestDto findLoginIdRequestDto) {
+        return memberRepository.findByEmail(findLoginIdRequestDto.getEmail())
+                .map(member -> MemberDto.FindLoginIdResponseDto.toDto(member.getLoginId()))
+                .orElseThrow(() -> new CustomException(CustomResponseStatus.USER_NOT_FOUND));
+    }
+
     private MemberDto.CheckDuplicationResponseDto isEmpty(Optional<Member> member) {
         if (member.isEmpty()) {
             return MemberDto.CheckDuplicationResponseDto.builder()

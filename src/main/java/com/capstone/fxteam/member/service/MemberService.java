@@ -11,5 +11,6 @@ public interface MemberService {
     MemberDto.CheckDuplicationResponseDto checkNicknameDuplication(MemberDto.CheckNicknameDuplicationRequestDto nicknameDuplicationRequestDto);
     MemberDto.SignInResponseDto signIn(MemberDto.SignInRequestDto signDto);
     void logout(String accessToken);
+    MemberDto.FindLoginIdResponseDto findLoginId(MemberDto.FindLoginIdRequestDto findLoginIdRequestDto);
 
 }

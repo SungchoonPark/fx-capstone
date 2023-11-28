@@ -108,4 +108,25 @@ public class MemberDto {
                     .build();
         }
     }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class FindLoginIdRequestDto {
+        private String email;
+    }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class FindLoginIdResponseDto {
+        private String foundLoginId;
+
+        public static FindLoginIdResponseDto toDto(String foundLoginId) {
+            return FindLoginIdResponseDto.builder()
+                    .foundLoginId(foundLoginId)
+                    .build();
+        }
+    }
 }

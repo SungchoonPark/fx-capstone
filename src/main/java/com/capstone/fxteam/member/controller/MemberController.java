@@ -51,4 +51,11 @@ public class MemberController {
         memberService.logout(accessToken);
         return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(CustomResponseStatus.SUCCESS));
     }
+
+    @GetMapping("/id")
+    public ResponseEntity<ApiResponse<MemberDto.FindLoginIdResponseDto>> findLoginId(@RequestBody MemberDto.FindLoginIdRequestDto findLoginIdRequestDto) {
+        System.out.println("findLoginIdRequestDto = " + findLoginIdRequestDto);
+        MemberDto.FindLoginIdResponseDto findLoginIdResponseDto = memberService.findLoginId(findLoginIdRequestDto);
+        return ResponseEntity.ok().body(ApiResponse.createSuccess(findLoginIdResponseDto, CustomResponseStatus.SUCCESS));
+    }
 }
