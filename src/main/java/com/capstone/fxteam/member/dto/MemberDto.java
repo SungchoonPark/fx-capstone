@@ -16,9 +16,6 @@ public class MemberDto {
         private String nickname;
 
         public Member toEntity() {
-            System.out.println("id = " + loginId);
-            System.out.println("password = " + password);
-            System.out.println("email = " + email);
             return Member.builder()
                     .loginId(loginId)
                     .password(password)
@@ -37,6 +34,10 @@ public class MemberDto {
     @AllArgsConstructor
     public static class SignUpResponseDto {
         private String nickname;
+
+        public SignUpResponseDto(Member member) {
+            this.nickname = member.getNickname();
+        }
     }
 
     @Data
@@ -72,5 +73,39 @@ public class MemberDto {
     @AllArgsConstructor
     public static class CheckDuplicationResponseDto {
         private boolean isDuplication;
+    }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class SignInRequestDto {
+        private String loginId;
+        private String password;
+
+        public Member toEntity() {
+            return Member.builder()
+                    .loginId(loginId)
+                    .password(password)
+                    .build();
+        }
+    }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class SignInResponseDto {
+        private String accessToken;
+        private String refreshToken;
+        private Long accessTokenExpirationTime;
+
+        public static SignInResponseDto toDto(String accessToken, String refreshToken, long accessTokenExpirationTime) {
+            return SignInResponseDto.builder()
+                    .accessToken(accessToken)
+                    .refreshToken(refreshToken)
+                    .accessTokenExpirationTime(accessTokenExpirationTime)
+                    .build();
+        }
     }
 }

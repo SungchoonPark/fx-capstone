@@ -21,7 +21,7 @@ public enum CustomResponseStatus {
 
     // 3000 : UNAUTHORIZED
     EXPIRED_JWT(false, 3000, "만료된 토큰입니다."),
-    LOGIN_FAILED_USERNAME(false, 3001, "아이디가 틀렸습니다."),
+    LOGIN_FAILED_LOGINID(false, 3001, "아이디가 틀렸습니다."),
     LOGIN_FAILED_PWD(false, 3002, "비밀번호가 틀렸습니다."),
     AUTHORIZATION_FAILED(false, 3003, "권한이 없습니다."),
 
@@ -36,7 +36,7 @@ public enum CustomResponseStatus {
     private final int code;
     private final String message;
 
-    private CustomResponseStatus(boolean isSuccess, int code, String message) {
+    CustomResponseStatus(boolean isSuccess, int code, String message) {
         this.isSuccess = isSuccess;
         this.code = code;
         this.message = message;

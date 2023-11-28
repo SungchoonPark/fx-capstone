@@ -4,6 +4,7 @@ import com.capstone.fxteam.member.repository.MemberRepository;
 import com.capstone.fxteam.member.service.PrincipalDetailsServiceImpl;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -50,6 +51,17 @@ public final class JwtUtils {
         log.info("userDetails.getPassword : " + userDetails.getPassword());
         log.info("getAuthorities() : " + userDetails.getAuthorities().toString());
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+    }
+
+    public String createToken(String email, long expireTime) {
+        Claims claims = Jwts.claims().setSubject(email);
+        claims.put("email", email);
+        return Jwts.builder()
+                .setClaims(claims)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + expireTime))
+                .signWith(getSigningKey(SECRET_KEY), SignatureAlgorithm.HS256)
+                .compact();
     }
 
     public String resolveToken(String token) {
