@@ -9,7 +9,7 @@ public interface MemberService {
     MemberDto.CheckDuplicationResponseDto checkIdDuplication(MemberDto.CheckIdDuplicationRequestDto idDuplicationRequestDto);
     MemberDto.CheckDuplicationResponseDto checkEmailDuplication(MemberDto.CheckEmailDuplicationRequestDto emailDuplicationRequestDto);
     MemberDto.CheckDuplicationResponseDto checkNicknameDuplication(MemberDto.CheckNicknameDuplicationRequestDto nicknameDuplicationRequestDto);
-
     MemberDto.SignInResponseDto signIn(MemberDto.SignInRequestDto signDto);
+    void logout(String accessToken);
 
 }

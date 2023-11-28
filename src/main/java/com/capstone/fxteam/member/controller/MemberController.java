@@ -45,4 +45,10 @@ public class MemberController {
         MemberDto.SignInResponseDto signInResponseDto = memberService.signIn(signInRequestDto);
         return ResponseEntity.ok().body(ApiResponse.createSuccess(signInResponseDto, CustomResponseStatus.SUCCESS));
     }
+
+    @PostMapping("/logout")
+    public ResponseEntity<ApiResponse<String>> logout(@RequestHeader("Authorization") String accessToken) {
+        memberService.logout(accessToken);
+        return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(CustomResponseStatus.SUCCESS));
+    }
 }

@@ -11,11 +11,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Objects;
 import java.util.Optional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 @Slf4j
 public class MemberServiceImpl implements MemberService {
@@ -35,6 +36,7 @@ public class MemberServiceImpl implements MemberService {
                 .nickname(signUpMember.getNickname())
                 .build();
     }
+
     @Override
     public MemberDto.CheckDuplicationResponseDto checkIdDuplication(MemberDto.CheckIdDuplicationRequestDto idDuplicationRequestDto) {
         Optional<Member> memberByLoginId = memberRepository.findByLoginId(idDuplicationRequestDto.getLoginId());
@@ -63,7 +65,7 @@ public class MemberServiceImpl implements MemberService {
         /***
          * id가 틀린 경우
          */
-        if(findMember.isEmpty()) {
+        if (findMember.isEmpty()) {
             throw new CustomException(CustomResponseStatus.LOGIN_FAILED_LOGINID);
         }
 
@@ -72,7 +74,7 @@ public class MemberServiceImpl implements MemberService {
          */
         System.out.println("signDto password = " + signDto.getPassword());
         System.out.println("findMember = " + findMember.get().getPassword());
-        if(!passwordEncoder.matches(signDto.getPassword(), findMember.get().getPassword())) {
+        if (!passwordEncoder.matches(signDto.getPassword(), findMember.get().getPassword())) {
             throw new CustomException(CustomResponseStatus.LOGIN_FAILED_PWD);
         }
 
@@ -82,12 +84,28 @@ public class MemberServiceImpl implements MemberService {
         if (refreshToken == null) {
             // refreshToken이 존재하지 않는다면 설정해줘야함
             String newRefreshToken = jwtUtils.createToken(findMember.get().getEmail(), JwtUtils.REFRESH_TOKEN_VALID_TIME);
-            log.info("newRefreshToken : "+newRefreshToken);
+            log.info("newRefreshToken : " + newRefreshToken);
             redisUtils.setDataExpire("RT:" + findMember.get().getEmail(), newRefreshToken, JwtUtils.REFRESH_TOKEN_VALID_TIME_IN_REDIS);
             refreshToken = newRefreshToken;
         }
 
         return MemberDto.SignInResponseDto.toDto(accessToken, refreshToken, JwtUtils.TOKEN_VALID_TIME);
+    }
+
+    @Override
+    public void logout(String accessToken) {
+        String resolveToken = jwtUtils.resolveToken(accessToken);
+
+        String emailInToken = jwtUtils.getEmailInToken(resolveToken);
+        String refreshTokenInRedis = redisUtils.getData("RT:" + emailInToken);
+
+        if (refreshTokenInRedis == null) {
+            throw new CustomException(CustomResponseStatus.REFRESHTOKEN_NOT_FOUND);
+        }
+
+        redisUtils.deleteData("RT:" + emailInToken);
+
+        redisUtils.setDataExpire(resolveToken, "logout", jwtUtils.getExpiration(resolveToken));
     }
 
     private MemberDto.CheckDuplicationResponseDto isEmpty(Optional<Member> member) {
