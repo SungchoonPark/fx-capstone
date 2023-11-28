@@ -16,8 +16,8 @@ public class PrincipalDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return (UserDetails) memberRepository.findByEmail(email).orElseThrow(() -> {
-            throw new CustomException(CustomResponseStatus.USER_NOT_FOUND);
-        });
+        return memberRepository.findByEmail(email)
+                .map(PrincipalDetails::new)
+                .orElseThrow(() -> new CustomException(CustomResponseStatus.USER_NOT_FOUND));
     }
 }
