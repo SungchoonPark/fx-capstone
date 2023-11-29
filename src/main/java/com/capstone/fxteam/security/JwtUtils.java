@@ -8,6 +8,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,11 +24,12 @@ import java.util.Date;
 public final class JwtUtils {
     private final MemberRepository memberRepository;
     private final PrincipalDetailsServiceImpl userDetailsService;
-    private final String SECRET_KEY = "saldkfjlaksfjlitulkasjgklasghisaouytlasjktkalthlkjas";
+    @Value("${spring.jwt.security.key}")
+    private final String SECRET_KEY;
 
-    public static final long TOKEN_VALID_TIME = 1000L * 60 * 5 * 12; // 1시간
-    public static final long REFRESH_TOKEN_VALID_TIME = 1000L * 60 * 60 * 144;
-    public static final long REFRESH_TOKEN_VALID_TIME_IN_REDIS = 60 * 60 * 24 * 7;
+    public static final long TOKEN_VALID_TIME = 1000L * 60 * 5; // 5분
+    public static final long REFRESH_TOKEN_VALID_TIME = 1000L * 60 * 60 * 144; // 일주일
+    public static final long REFRESH_TOKEN_VALID_TIME_IN_REDIS = 60 * 60 * 24 * 7; // 일주일 (초)
 
     public Key getSigningKey(String secretKey) {
         return Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
