@@ -47,7 +47,7 @@ public class MemberController {
         return ResponseEntity.ok().body(ApiResponse.createSuccess(signInResponseDto, CustomResponseStatus.SUCCESS));
     }
 
-    @PostMapping("/logout")
+    @PostMapping("/member/logout")
     public ResponseEntity<ApiResponse<String>> logout(@RequestHeader("Authorization") String accessToken) {
         memberService.logout(accessToken);
         return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(CustomResponseStatus.SUCCESS));
