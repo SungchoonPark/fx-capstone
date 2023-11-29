@@ -2,6 +2,7 @@ package com.capstone.fxteam.member.controller;
 
 import com.capstone.fxteam.constant.dto.ApiResponse;
 import com.capstone.fxteam.constant.enums.CustomResponseStatus;
+import com.capstone.fxteam.email.dto.EmailDto;
 import com.capstone.fxteam.member.dto.MemberDto;
 import com.capstone.fxteam.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -58,4 +59,19 @@ public class MemberController {
         MemberDto.FindLoginIdResponseDto findLoginIdResponseDto = memberService.findLoginId(findLoginIdRequestDto);
         return ResponseEntity.ok().body(ApiResponse.createSuccess(findLoginIdResponseDto, CustomResponseStatus.SUCCESS));
     }
+
+    @PostMapping("/email/request")
+    public ResponseEntity<ApiResponse<String>> sendEmail(@RequestBody EmailDto.EmailRequestDto emailDto) {
+        memberService.sendVerificationEmail(emailDto);
+        return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(CustomResponseStatus.SUCCESS));
+    }
+
+    @GetMapping("/email/verification")
+    public ResponseEntity<ApiResponse<EmailDto.EmailVerificationResultDto>> verificationAuthCodeInEmail(
+            @RequestBody EmailDto.EmailVerificationRequestDto emailVerificationRequestDto
+    ) {
+        EmailDto.EmailVerificationResultDto emailVerificationResultDto = memberService.verifyAuthCode(emailVerificationRequestDto);
+        return ResponseEntity.ok().body(ApiResponse.createSuccess(emailVerificationResultDto, CustomResponseStatus.SUCCESS));
+    }
+
 }

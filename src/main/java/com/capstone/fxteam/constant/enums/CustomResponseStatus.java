@@ -30,7 +30,9 @@ public enum CustomResponseStatus {
     POST_NOT_FOUND(false, 4001, "게시물 정보를 찾을 수 없습니다."),
 
     // 5000 : SERVER ERROR
-    INTERNAL_SERVER_ERROR(false, 5000, "내부 서버 오류입니다.");
+    INTERNAL_SERVER_ERROR(false, 5000, "내부 서버 오류입니다."),
+    MAIL_SEND_FAIL(false, 5001, "메일전송이 실패했습니다."),
+    NO_SUCH_ALGORITHM(false, 5002, "알고리즘 사용 불가능합니다."),;
 
     private final boolean isSuccess;
     private final int code;

@@ -1,5 +1,6 @@
 package com.capstone.fxteam.member.service;
 
+import com.capstone.fxteam.email.dto.EmailDto;
 import com.capstone.fxteam.member.dto.MemberDto;
 
 public interface MemberService {
@@ -12,5 +13,7 @@ public interface MemberService {
     MemberDto.SignInResponseDto signIn(MemberDto.SignInRequestDto signDto);
     void logout(String accessToken);
     MemberDto.FindLoginIdResponseDto findLoginId(MemberDto.FindLoginIdRequestDto findLoginIdRequestDto);
+    void sendVerificationEmail(EmailDto.EmailRequestDto toEmail);
+    EmailDto.EmailVerificationResultDto verifyAuthCode(EmailDto.EmailVerificationRequestDto emailVerificationDto);
 
 }
