@@ -18,6 +18,7 @@ public enum CustomResponseStatus {
     DUPLICATION_USERNAME(false, 2008, "중복된 Username입니다."),
     DUPLICATION_NICKNAME(false, 2009, "중복된 Nickname입니다."),
     USER_NOT_MATCH(false, 2010, "유저가 일치하지 않습니다."),
+    PASSWORD_NOT_MATCH(false, 2011, "비밀번호가 일치하지 않습니다."),
 
     // 3000 : UNAUTHORIZED
     EXPIRED_JWT(false, 3000, "만료된 토큰입니다."),

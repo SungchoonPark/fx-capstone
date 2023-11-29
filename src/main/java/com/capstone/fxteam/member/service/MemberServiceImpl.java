@@ -150,6 +150,25 @@ public class MemberServiceImpl implements MemberService {
         return EmailDto.EmailVerificationResultDto.from(emailVerificationDto.getAuthCode().equals(authCodeInRedis));
     }
 
+    @Override
+    public void forceChangePassword(MemberDto.forceChangePasswordRequestDto forceChangePasswordDto) {
+        memberRepository.findByEmail(forceChangePasswordDto.getEmail())
+                .orElseThrow(() -> new CustomException(CustomResponseStatus.USER_NOT_FOUND))
+                .changePassword(encodingPassword(forceChangePasswordDto.getNewPassword()));
+    }
+
+    @Override
+    public void normalChangePassword(MemberDto.normalChangePasswordRequestDto changePasswordDto, String username) {
+        Member member = memberRepository.findByLoginId(username)
+                .orElseThrow(() -> new CustomException(CustomResponseStatus.USER_NOT_FOUND));
+
+        if(!passwordEncoder.matches(changePasswordDto.getCurrentPassword(), member.getPassword())) {
+            throw new CustomException(CustomResponseStatus.PASSWORD_NOT_MATCH);
+        }
+
+        member.changePassword(encodingPassword(changePasswordDto.getNewPassword()));
+    }
+
     private String createAuthCode() {
         int length = 6;
         try {

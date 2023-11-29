@@ -129,4 +129,20 @@ public class MemberDto {
                     .build();
         }
     }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class forceChangePasswordRequestDto {
+        private String email;
+        private String newPassword;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class normalChangePasswordRequestDto {
+        private String currentPassword;
+        private String newPassword;
+    }
 }

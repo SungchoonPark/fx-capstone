@@ -40,4 +40,8 @@ public class Member extends BaseEntity {
 
     @Column(nullable = true)
     private long providerId;
+
+    public void changePassword(String password) {
+        this.password = password;
+    }
 }

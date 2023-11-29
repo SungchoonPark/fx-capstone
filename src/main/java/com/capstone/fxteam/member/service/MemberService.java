@@ -15,5 +15,7 @@ public interface MemberService {
     MemberDto.FindLoginIdResponseDto findLoginId(MemberDto.FindLoginIdRequestDto findLoginIdRequestDto);
     void sendVerificationEmail(EmailDto.EmailRequestDto toEmail);
     EmailDto.EmailVerificationResultDto verifyAuthCode(EmailDto.EmailVerificationRequestDto emailVerificationDto);
+    void forceChangePassword(MemberDto.forceChangePasswordRequestDto changePasswordDto);
+    void normalChangePassword(MemberDto.normalChangePasswordRequestDto changePasswordDto, String username);
 
 }

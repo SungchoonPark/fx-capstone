@@ -5,8 +5,10 @@ import com.capstone.fxteam.constant.enums.CustomResponseStatus;
 import com.capstone.fxteam.email.dto.EmailDto;
 import com.capstone.fxteam.member.dto.MemberDto;
 import com.capstone.fxteam.member.service.MemberService;
+import com.capstone.fxteam.member.service.PrincipalDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -72,6 +74,22 @@ public class MemberController {
     ) {
         EmailDto.EmailVerificationResultDto emailVerificationResultDto = memberService.verifyAuthCode(emailVerificationRequestDto);
         return ResponseEntity.ok().body(ApiResponse.createSuccess(emailVerificationResultDto, CustomResponseStatus.SUCCESS));
+    }
+
+    @PutMapping("/force/pwd")
+    public ResponseEntity<ApiResponse<String>> forceChangePassword(@RequestBody MemberDto.forceChangePasswordRequestDto changePasswordDto) {
+        memberService.forceChangePassword(changePasswordDto);
+        return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(CustomResponseStatus.SUCCESS));
+    }
+
+    @PutMapping("/user/pwd")
+    public ResponseEntity<ApiResponse<String>> normalChangePassword(
+            @RequestBody MemberDto.normalChangePasswordRequestDto changePasswordDto,
+            Authentication authentication
+    ) {
+        PrincipalDetails principal = (PrincipalDetails) authentication.getPrincipal();
+        memberService.normalChangePassword(changePasswordDto, principal.getUsername());
+        return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(CustomResponseStatus.SUCCESS));
     }
 
 }
