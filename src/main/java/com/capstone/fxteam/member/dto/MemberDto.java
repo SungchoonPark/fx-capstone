@@ -145,4 +145,15 @@ public class MemberDto {
         private String currentPassword;
         private String newPassword;
     }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ReissueResponseDto {
+        private String newAccessToken;
+
+        public static ReissueResponseDto from(String newAccessToken) {
+            return new ReissueResponseDto(newAccessToken);
+        }
+    }
 }

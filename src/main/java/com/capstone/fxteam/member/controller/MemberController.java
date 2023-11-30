@@ -92,4 +92,11 @@ public class MemberController {
         return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(CustomResponseStatus.SUCCESS));
     }
 
+    @PostMapping("/member/reissue")
+    public ResponseEntity<ApiResponse<MemberDto.ReissueResponseDto>> accessTokenReissue(@RequestHeader("Authorization") String refreshToken) {
+        MemberDto.ReissueResponseDto reissueResponseDto = memberService.tokenReissue(refreshToken);
+        return ResponseEntity.ok().body(ApiResponse.createSuccess(reissueResponseDto, CustomResponseStatus.SUCCESS));
+
+    }
+
 }

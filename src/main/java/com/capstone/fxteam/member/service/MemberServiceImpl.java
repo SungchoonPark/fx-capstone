@@ -162,11 +162,26 @@ public class MemberServiceImpl implements MemberService {
         Member member = memberRepository.findByLoginId(username)
                 .orElseThrow(() -> new CustomException(CustomResponseStatus.USER_NOT_FOUND));
 
-        if(!passwordEncoder.matches(changePasswordDto.getCurrentPassword(), member.getPassword())) {
+        if (!passwordEncoder.matches(changePasswordDto.getCurrentPassword(), member.getPassword())) {
             throw new CustomException(CustomResponseStatus.PASSWORD_NOT_MATCH);
         }
 
         member.changePassword(encodingPassword(changePasswordDto.getNewPassword()));
+    }
+
+    @Override
+    public MemberDto.ReissueResponseDto tokenReissue(String refreshToken) {
+        String resolveToken = jwtUtils.resolveToken(refreshToken);
+        String emailInToken = jwtUtils.getEmailInToken(resolveToken);
+        String refreshTokenInRedis = redisUtils.getData("RT:" + emailInToken);
+
+        if(!resolveToken.equals(refreshTokenInRedis)) {
+            throw new CustomException(CustomResponseStatus.REFRESHTOKEN_NOT_MATCH);
+        }
+
+        String newAccessToken = jwtUtils.createToken(emailInToken, JwtUtils.TOKEN_VALID_TIME);
+
+        return MemberDto.ReissueResponseDto.from(newAccessToken);
     }
 
     private String createAuthCode() {

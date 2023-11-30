@@ -1,8 +1,10 @@
 package com.capstone.fxteam.security;
 
 import com.capstone.fxteam.constant.enums.CustomResponseStatus;
-import com.capstone.fxteam.constant.exception.CustomException;
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.security.SignatureException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,27 +26,26 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String path = request.getServletPath();
         String token = jwtUtils.resolveToken(request.getHeader("Authorization"));
-        log.info("token : " + token);
+        log.info("Enter Token INFO : " + token);
 
-        if (token != null && !token.isEmpty()) {
+        if (!token.isEmpty()) {
             try {
                 jwtUtils.parseToken(token);
-                if (!request.getRequestURI().equals("/api/reissue")) {
+                if (!request.getRequestURI().equals("/api/v1/reissue")) {
                     String isLogout = redisUtils.getData(token);
+                    // getData 해서 값이 가져와지면 AT가 블랙리스트에 등록된 상태이므로 로그아웃된 상태임.
                     if (isLogout == null) {
-                        log.info("enter the this logic");
                         Authentication authentication = jwtUtils.getAuthentication(token);
-                        log.info("filter get Authorities() : " + authentication.getAuthorities().toString());
                         SecurityContextHolder.getContext().setAuthentication(authentication);
                     }
                 }
             } catch (ExpiredJwtException e) {
-                log.info("expired Token");
+                log.error("Enter [EXPIRED TOKEN]");
                 request.setAttribute("exception", CustomResponseStatus.EXPIRED_JWT.getMessage());
-            } catch (JwtException e) {
-                log.info("invalid token");
+            } catch (JwtException | UnsupportedJwtException | MalformedJwtException | SignatureException |
+                     IllegalArgumentException e) {
+                log.error("Enter [INVALID TOKEN]");
                 request.setAttribute("exception", CustomResponseStatus.BAD_JWT.getMessage());
             }
         } else {

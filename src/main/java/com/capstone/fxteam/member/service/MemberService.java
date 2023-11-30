@@ -17,5 +17,6 @@ public interface MemberService {
     EmailDto.EmailVerificationResultDto verifyAuthCode(EmailDto.EmailVerificationRequestDto emailVerificationDto);
     void forceChangePassword(MemberDto.forceChangePasswordRequestDto changePasswordDto);
     void normalChangePassword(MemberDto.normalChangePasswordRequestDto changePasswordDto, String username);
+    MemberDto.ReissueResponseDto tokenReissue(String refreshToken);
 
 }

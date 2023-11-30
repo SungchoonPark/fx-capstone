@@ -14,11 +14,13 @@ public enum CustomResponseStatus {
     INVALID_REFRESH_TOKEN(false, 2002, "Refresh Token이 일치하지 않습니다."),
     AUTHENTICATION_FAILED(false, 2003, "정상적인 JWT가 아닙니다."),
     REFRESHTOKEN_NOT_FOUND(false, 2004, "해당 RefreshToken이 존재하지 않습니다."),
-    DUPLICATION_EMAIL(false, 2007, "중복된 Email입니다"),
-    DUPLICATION_USERNAME(false, 2008, "중복된 Username입니다."),
-    DUPLICATION_NICKNAME(false, 2009, "중복된 Nickname입니다."),
-    USER_NOT_MATCH(false, 2010, "유저가 일치하지 않습니다."),
-    PASSWORD_NOT_MATCH(false, 2011, "비밀번호가 일치하지 않습니다."),
+    REFRESHTOKEN_NOT_MATCH(false, 2005, "RefreshToken이 일치하지 않습니다."),
+    DUPLICATION_EMAIL(false, 2006, "중복된 Email입니다"),
+    DUPLICATION_USERNAME(false, 2007, "중복된 Username입니다."),
+    DUPLICATION_NICKNAME(false, 2008, "중복된 Nickname입니다."),
+    USER_NOT_MATCH(false, 2009, "유저가 일치하지 않습니다."),
+    PASSWORD_NOT_MATCH(false, 2010, "비밀번호가 일치하지 않습니다."),
+    NULL_TOKEN(false, 2011, "토큰이 공백입니다."),
 
     // 3000 : UNAUTHORIZED
     EXPIRED_JWT(false, 3000, "만료된 토큰입니다."),

@@ -19,12 +19,12 @@ public class ExceptionController {
     @GetMapping("/entrypoint/nullToken")
     public void nullTokenException() {
         log.info("nullTokenException Controller entered");
-        throw new CustomException(CustomResponseStatus.AUTHENTICATION_FAILED);
+        throw new CustomException(CustomResponseStatus.NULL_TOKEN);
     }
 
     @GetMapping("/entrypoint/expiredToken")
     public void expiredTokenException() {
-        log.info("expiredTokenException Controller entered");
+        log.error("expiredTokenException Controller entered");
         throw new CustomException(CustomResponseStatus.EXPIRED_JWT);
     }
 

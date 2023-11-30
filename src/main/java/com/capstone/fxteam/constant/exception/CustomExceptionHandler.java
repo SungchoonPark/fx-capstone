@@ -24,10 +24,9 @@ public class CustomExceptionHandler {
 
     @ExceptionHandler(CustomException.class)
     public ResponseEntity<ApiResponse<String>> handleCustomException(CustomException e) {
-        log.info("handleCustomException실행");
-        log.info("e.getCode : " + e.getResponseStatus().getCode());
-        log.info("e.getStatus : " + e.getResponseStatus().toString());
-        log.info("e.getMessage : " + e.getResponseStatus().getMessage());
+        log.error("e.getCode : " + e.getResponseStatus().getCode());
+        log.error("e.getStatus : " + e.getResponseStatus().toString());
+        log.error("e.getMessage : " + e.getResponseStatus().getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(ApiResponse.createError(e.getResponseStatus()));
     }
