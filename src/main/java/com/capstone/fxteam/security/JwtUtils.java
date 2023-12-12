@@ -24,7 +24,7 @@ import java.util.Date;
 public final class JwtUtils {
     private final MemberRepository memberRepository;
     private final PrincipalDetailsServiceImpl userDetailsService;
-    @Value("${spring.jwt.security.key}")
+    @Value("${jwt.security.key}")
     private String SECRET_KEY;
 
     public static final long TOKEN_VALID_TIME = 1000L * 60 * 5; // 5분

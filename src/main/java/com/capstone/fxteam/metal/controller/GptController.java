@@ -17,11 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class GptController {
     private final ChatService chatService;
 
-//    @PostMapping("/chat")
-//    public ResponseEntity<ApiResponse<String>> chatWithGpt(@RequestBody String question) {
-//        chatService.chatResponse(question);
-//    }
-
     @PostMapping("/chat")
     public String chatWithGpt(@RequestBody String question) {
         log.info("question : " + question);

@@ -1,7 +1,7 @@
 package com.capstone.fxteam.member.model;
 
 import com.capstone.fxteam.constant.entity.BaseEntity;
-import com.capstone.fxteam.member.model.enums.Provider;
+import com.capstone.fxteam.member.model.enums.OAuthProvider;
 import com.capstone.fxteam.member.model.enums.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -18,7 +18,7 @@ public class Member extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int memberId;
+    private long memberId;
 
     @Column(nullable = false, length = 12, unique = true)
     private String loginId;
@@ -36,7 +36,7 @@ public class Member extends BaseEntity {
     private Role role;
 
     @Enumerated(value = EnumType.STRING)
-    private Provider provider;
+    private OAuthProvider provider;
 
     @Column(nullable = true)
     private long providerId;
