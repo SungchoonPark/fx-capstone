@@ -1,6 +1,7 @@
 package com.capstone.fxteam.member.model;
 
 import com.capstone.fxteam.constant.entity.BaseEntity;
+import com.capstone.fxteam.constant.enums.DeleteEnum;
 import com.capstone.fxteam.member.model.enums.OAuthProvider;
 import com.capstone.fxteam.member.model.enums.Role;
 import jakarta.persistence.*;
@@ -40,6 +41,9 @@ public class Member extends BaseEntity {
 
     @Column(nullable = true)
     private long providerId;
+
+    @Enumerated(EnumType.STRING)
+    private DeleteEnum deleteEnum;
 
     public void changePassword(String password) {
         this.password = password;

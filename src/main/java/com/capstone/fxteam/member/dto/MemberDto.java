@@ -1,5 +1,6 @@
 package com.capstone.fxteam.member.dto;
 
+import com.capstone.fxteam.constant.enums.DeleteEnum;
 import com.capstone.fxteam.member.model.Member;
 import com.capstone.fxteam.member.model.enums.Role;
 import lombok.*;
@@ -24,6 +25,7 @@ public class MemberDto {
                     .nickname(nickname)
                     .provider(null)
                     .providerId(0)
+                    .deleteEnum(DeleteEnum.NOT_DELETE)
                     .build();
         }
     }

@@ -31,6 +31,9 @@ public enum CustomResponseStatus {
     // 4000 : NOT FOUND
     USER_NOT_FOUND(false, 4000, "사용자 정보를 찾을 수 없습니다."),
     POST_NOT_FOUND(false, 4001, "게시물 정보를 찾을 수 없습니다."),
+    METAL_NOT_FOUND(false, 4002, "해당 금속을 찾을 수 없습니다."),
+    METAL_IMAGE_NOT_FOUND(false, 4002, "해당 금속이미지를 찾을 수 없습니다."),
+
 
     // 5000 : SERVER ERROR
     INTERNAL_SERVER_ERROR(false, 5000, "내부 서버 오류입니다."),
