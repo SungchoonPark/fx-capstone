@@ -14,4 +14,6 @@ public interface BoardService {
             List<MultipartFile> files,
             String loginId
     );
+
+    void delete(long boardId, String loginId);
 }

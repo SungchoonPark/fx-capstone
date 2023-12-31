@@ -10,6 +10,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.Objects;
+
 @Entity
 @Getter
 @AllArgsConstructor
@@ -47,5 +49,9 @@ public class Member extends BaseEntity {
 
     public void changePassword(String password) {
         this.password = password;
+    }
+
+    public boolean isSameMember(String loginId) {
+        return Objects.equals(this.loginId, loginId);
     }
 }

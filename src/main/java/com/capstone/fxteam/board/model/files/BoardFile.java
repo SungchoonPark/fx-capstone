@@ -35,4 +35,8 @@ public class BoardFile extends BaseEntity {
     public static BoardFile from(String fileUrl, Board board) {
         return new BoardFile(fileUrl, board);
     }
+
+    public void deleteBoardFile() {
+        this.deleteEnum = DeleteEnum.DELETE;
+    }
 }

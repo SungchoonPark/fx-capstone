@@ -13,6 +13,7 @@ import com.capstone.fxteam.metal.service.image.S3Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -20,6 +21,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional
 public class BoardServiceImpl implements BoardService{
     private final MemberRepository memberRepository;
     private final BoardRepository boardRepository;
@@ -28,9 +30,7 @@ public class BoardServiceImpl implements BoardService{
 
     @Override
     public BoardDto.BoardPostResponseDto post(BoardDto.BoardPostRequestDto boardPostRequestDto, List<MultipartFile> files, String loginId) {
-        Member member = memberRepository.findByLoginId(loginId).orElseThrow(() -> {
-            throw new CustomException(CustomResponseStatus.USER_NOT_FOUND);
-        });
+        Member member = findMemberByLoginId(loginId);
 
         Board savedBoard = boardRepository.save(boardPostRequestDto.toEntity(member));
 
@@ -39,5 +39,26 @@ public class BoardServiceImpl implements BoardService{
         fileUrls.forEach(fileUrl -> boardFileRepository.save(BoardFile.from(fileUrl, savedBoard)));
 
         return new BoardDto.BoardPostResponseDto(savedBoard.getBoardId());
+    }
+
+    @Override
+    public void delete(long boardId, String loginId) {
+        Member member = findMemberByLoginId(loginId);
+
+        Board board = boardRepository.findById(boardId).orElseThrow(() -> {
+            throw new CustomException(CustomResponseStatus.BOARD_NOT_FOUND);
+        });
+
+        if (!member.isSameMember(loginId)) {
+            throw new CustomException(CustomResponseStatus.AUTHORIZATION_FAILED);
+        }
+
+        board.deleteBoard();
+    }
+
+    private Member findMemberByLoginId(String loginId) {
+        return memberRepository.findByLoginId(loginId).orElseThrow(() -> {
+            throw new CustomException(CustomResponseStatus.USER_NOT_FOUND);
+        });
     }
 }
