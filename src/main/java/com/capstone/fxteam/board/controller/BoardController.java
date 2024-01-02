@@ -38,6 +38,12 @@ public class BoardController {
         return ResponseEntity.ok().body(ApiResponse.createSuccess(boardDtos, CustomResponseStatus.SUCCESS));
     }
 
+    @GetMapping("/user/board/{boardId}")
+    public ResponseEntity<ApiResponse<BoardDto.BoardDetailGetResponseDto>> getBoardDetail(@PathVariable long boardId) {
+        BoardDto.BoardDetailGetResponseDto boardDetail = boardService.getBoardDetail(boardId);
+        return ResponseEntity.ok().body(ApiResponse.createSuccess(boardDetail, CustomResponseStatus.SUCCESS));
+    }
+
     @PutMapping("/user/board/{boardId}")
     public ResponseEntity<ApiResponse<BoardDto.BoardPostResponseDto>> updateBoard(
             @PathVariable long boardId,

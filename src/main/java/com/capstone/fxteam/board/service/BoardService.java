@@ -18,6 +18,8 @@ public interface BoardService {
 
     Page<BoardDto.BoardGetResponseDto> getBoars(String category);
 
+    BoardDto.BoardDetailGetResponseDto getBoardDetail(Long boardId);
+
     BoardDto.BoardPostResponseDto update(
             Long boardId,
             BoardDto.BoardPostRequestDto boardPostRequestDto,

@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class BoardDto {
 
@@ -58,6 +60,20 @@ public class BoardDto {
         private String writer;
         private int viewCount;
         private LocalDate createDate;
+    }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class BoardDetailGetResponseDto {
+        private long boardId;
+        private String title;
+        private String writer;
+        private String content;
+        private int viewCount;
+        private LocalDate createDate;
+        private List<String> urlList = new ArrayList<>();
     }
 
     @Data

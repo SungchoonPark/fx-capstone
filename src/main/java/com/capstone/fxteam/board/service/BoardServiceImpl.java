@@ -22,7 +22,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -64,6 +63,22 @@ public class BoardServiceImpl implements BoardService {
                     .createDate(board.getCreatedDate())
                     .build()
         );
+    }
+
+    @Override
+    public BoardDto.BoardDetailGetResponseDto getBoardDetail(Long boardId) {
+        Board board = findBoardByBoardId(boardId);
+        board.updateViewCount();
+
+        return BoardDto.BoardDetailGetResponseDto.builder()
+                .boardId(board.getBoardId())
+                .title(board.getTitle())
+                .content(board.getContent())
+                .writer(board.getMember().getNickname())
+                .viewCount(board.getViewCount())
+                .createDate(board.getCreatedDate())
+                .urlList(board.getBoardFileUrl())
+                .build();
     }
 
     @Override

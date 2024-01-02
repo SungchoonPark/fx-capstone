@@ -52,6 +52,10 @@ public class Board extends BaseEntity {
         return urls;
     }
 
+    public void updateViewCount() {
+        this.viewCount++;
+    }
+
     public void updateBoard(String title, String content) {
         this.title = title;
         this.content = content;
