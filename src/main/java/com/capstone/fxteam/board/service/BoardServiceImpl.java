@@ -2,20 +2,27 @@ package com.capstone.fxteam.board.service;
 
 import com.capstone.fxteam.board.dto.BoardDto;
 import com.capstone.fxteam.board.model.Board;
+import com.capstone.fxteam.board.model.enums.BoardCategory;
 import com.capstone.fxteam.board.model.files.BoardFile;
 import com.capstone.fxteam.board.repository.BoardFileRepository;
 import com.capstone.fxteam.board.repository.BoardRepository;
 import com.capstone.fxteam.constant.enums.CustomResponseStatus;
+import com.capstone.fxteam.constant.enums.DeleteEnum;
 import com.capstone.fxteam.constant.exception.CustomException;
 import com.capstone.fxteam.member.model.Member;
 import com.capstone.fxteam.member.repository.MemberRepository;
 import com.capstone.fxteam.metal.service.image.S3Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -39,6 +46,24 @@ public class BoardServiceImpl implements BoardService {
         fileUrls.forEach(fileUrl -> boardFileRepository.save(BoardFile.from(fileUrl, savedBoard)));
 
         return new BoardDto.BoardPostResponseDto(savedBoard.getBoardId());
+    }
+
+    @Override
+    public Page<BoardDto.BoardGetResponseDto> getBoars(String category) {
+        BoardCategory boardCategory = getCategory(category);
+        Sort sort = Sort.by("boardId").descending();
+        Pageable pageable = PageRequest.of(0, 10, sort);
+        Page<Board> boards = boardRepository.findByDeleteStatusAndBoardCategory(DeleteEnum.NOT_DELETE, boardCategory, pageable);
+
+        return boards.map(board ->
+            BoardDto.BoardGetResponseDto.builder()
+                    .boardId(board.getBoardId())
+                    .title(board.getTitle())
+                    .writer(board.getMember().getNickname())
+                    .viewCount(board.getViewCount())
+                    .createDate(board.getCreatedDate())
+                    .build()
+        );
     }
 
     @Override
@@ -90,5 +115,16 @@ public class BoardServiceImpl implements BoardService {
         return boardRepository.findById(boardId).orElseThrow(() -> {
             throw new CustomException(CustomResponseStatus.BOARD_NOT_FOUND);
         });
+    }
+
+    private BoardCategory getCategory(String category) {
+        return switch (category) {
+            case "update_information" -> BoardCategory.UPDATE_INFORMATION;
+            case "data_list" -> BoardCategory.DATA_LIST;
+            case "data_reception" -> BoardCategory.DATA_RECEPTION;
+            case "error_data_reception" -> BoardCategory.ERROR_DATA_RECEPTION;
+            case "news" -> BoardCategory.NEWS;
+            default -> BoardCategory.NONE;
+        };
     }
 }

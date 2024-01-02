@@ -9,6 +9,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 public class BoardDto {
 
     @Data
@@ -49,6 +52,18 @@ public class BoardDto {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
+    public static class BoardGetResponseDto {
+        private long boardId;
+        private String title;
+        private String writer;
+        private int viewCount;
+        private LocalDate createDate;
+    }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class BoardPostResponseDto {
         private long boardId;
 
@@ -58,4 +73,6 @@ public class BoardDto {
                     .build();
         }
     }
+
+
 }

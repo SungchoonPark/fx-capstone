@@ -5,6 +5,7 @@ import com.capstone.fxteam.board.service.BoardService;
 import com.capstone.fxteam.constant.dto.ApiResponse;
 import com.capstone.fxteam.constant.enums.CustomResponseStatus;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -29,6 +30,12 @@ public class BoardController {
         BoardDto.BoardPostResponseDto postResponse = boardService.post(boardPostRequestDto, files, userDetails.getUsername());
 
         return ResponseEntity.ok().body(ApiResponse.createSuccess(postResponse, CustomResponseStatus.SUCCESS));
+    }
+
+    @GetMapping("/user/{category}/boards")
+    public ResponseEntity<ApiResponse<Page<BoardDto.BoardGetResponseDto>>> getBoars(@PathVariable String category) {
+        Page<BoardDto.BoardGetResponseDto> boardDtos = boardService.getBoars(category);
+        return ResponseEntity.ok().body(ApiResponse.createSuccess(boardDtos, CustomResponseStatus.SUCCESS));
     }
 
     @PutMapping("/user/board/{boardId}")
