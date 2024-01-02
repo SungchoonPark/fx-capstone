@@ -22,7 +22,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 @Transactional
-public class BoardServiceImpl implements BoardService{
+public class BoardServiceImpl implements BoardService {
     private final MemberRepository memberRepository;
     private final BoardRepository boardRepository;
     private final BoardFileRepository boardFileRepository;
@@ -39,6 +39,30 @@ public class BoardServiceImpl implements BoardService{
         fileUrls.forEach(fileUrl -> boardFileRepository.save(BoardFile.from(fileUrl, savedBoard)));
 
         return new BoardDto.BoardPostResponseDto(savedBoard.getBoardId());
+    }
+
+    @Override
+    public BoardDto.BoardPostResponseDto update(Long boardId, BoardDto.BoardPostRequestDto boardPostRequestDto, List<MultipartFile> files) {
+        Board board = findBoardByBoardId(boardId);
+        board.updateBoard(boardPostRequestDto.getTitle(), boardPostRequestDto.getContent());
+
+        if (files == null) {
+            return new BoardDto.BoardPostResponseDto(board.getBoardId());
+        }
+
+        // s3에서 삭제
+        List<String> boardFileUrl = board.getBoardFileUrl();
+        boardFileUrl.forEach(s3Service::deleteFile);
+
+        // DB 에서 삭제 (Column 업데이트)
+        List<BoardFile> boardFiles = board.getBoardFiles();
+        boardFiles.forEach(BoardFile::deleteBoardFile);
+
+        // s3에 새로운 파일 업로드 및 DB에 저장
+        List<String> uploadFileUrls = s3Service.uploadFile(files);
+        uploadFileUrls.forEach(uploadFileUrl -> boardFileRepository.save(BoardFile.from(uploadFileUrl, board)));
+
+        return new BoardDto.BoardPostResponseDto(board.getBoardId());
     }
 
     @Override
@@ -59,6 +83,12 @@ public class BoardServiceImpl implements BoardService{
     private Member findMemberByLoginId(String loginId) {
         return memberRepository.findByLoginId(loginId).orElseThrow(() -> {
             throw new CustomException(CustomResponseStatus.USER_NOT_FOUND);
+        });
+    }
+
+    private Board findBoardByBoardId(Long boardId) {
+        return boardRepository.findById(boardId).orElseThrow(() -> {
+            throw new CustomException(CustomResponseStatus.BOARD_NOT_FOUND);
         });
     }
 }

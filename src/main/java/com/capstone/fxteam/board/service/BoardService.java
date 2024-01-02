@@ -15,5 +15,11 @@ public interface BoardService {
             String loginId
     );
 
+    BoardDto.BoardPostResponseDto update(
+            Long boardId,
+            BoardDto.BoardPostRequestDto boardPostRequestDto,
+            List<MultipartFile> files
+    );
+
     void delete(long boardId, String loginId);
 }

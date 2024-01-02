@@ -31,6 +31,16 @@ public class BoardController {
         return ResponseEntity.ok().body(ApiResponse.createSuccess(postResponse, CustomResponseStatus.SUCCESS));
     }
 
+    @PutMapping("/user/board/{boardId}")
+    public ResponseEntity<ApiResponse<BoardDto.BoardPostResponseDto>> updateBoard(
+            @PathVariable long boardId,
+            @RequestPart("boardPostRequest") BoardDto.BoardPostRequestDto boardPostRequestDto,
+            @RequestPart("files") List<MultipartFile> files
+    ) {
+        BoardDto.BoardPostResponseDto updateResponseDto = boardService.update(boardId, boardPostRequestDto, files);
+        return ResponseEntity.ok().body(ApiResponse.createSuccess(updateResponseDto, CustomResponseStatus.SUCCESS));
+    }
+
     @DeleteMapping("/user/board/{boardId}")
     public ResponseEntity<ApiResponse<String>> deleteBoard(
             @PathVariable long boardId,

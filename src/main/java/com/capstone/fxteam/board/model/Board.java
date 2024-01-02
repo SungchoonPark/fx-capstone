@@ -52,6 +52,11 @@ public class Board extends BaseEntity {
         return urls;
     }
 
+    public void updateBoard(String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
+
     public void deleteBoard() {
         this.deleteStatus = DeleteEnum.DELETE;
         this.boardFiles.forEach(BoardFile::deleteBoardFile);
