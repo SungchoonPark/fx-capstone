@@ -4,10 +4,13 @@ import com.capstone.fxteam.constant.enums.DeleteEnum;
 import com.capstone.fxteam.metal.model.FeatureRank;
 import com.capstone.fxteam.metal.model.FirstMetal;
 import com.capstone.fxteam.metal.model.SecondMetal;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 public class MetalDto {
     @Data
@@ -82,7 +85,7 @@ public class MetalDto {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static  class MetalPostResponseDto {
+    public static class MetalPostResponseDto {
         private String metalName;
 
         public static MetalPostResponseDto toDto(String metalName) {
@@ -125,4 +128,31 @@ public class MetalDto {
                     .build();
         }
     }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class QuestionResponseDto {
+        private String metalName;
+        private String metalCharacteristic;
+        private int rank;
+        private List<String> firstMetalImages;
+        private List<SecondMetalInfoDto> secondMetalInfos;
+    }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class SecondMetalInfoDto {
+        private String metalName;
+        private String metalCharacteristic;
+        private int rank;
+        private List<String> microImageUrls;
+        private List<String> conditionImageUrls;
+        private List<String> mechaExcelUrls;
+    }
+
+
 }

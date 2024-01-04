@@ -2,6 +2,7 @@ package com.capstone.fxteam.metal.model;
 
 import com.capstone.fxteam.constant.entity.BaseEntity;
 import com.capstone.fxteam.constant.enums.DeleteEnum;
+import com.capstone.fxteam.metal.model.enums.ImageCategory;
 import com.capstone.fxteam.metal.model.image.SecondMetalImage;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -35,7 +36,7 @@ public class SecondMetal extends BaseEntity {
     private FirstMetal firstMetal;
 
     @OneToMany(mappedBy = "secondMetal", cascade = {CascadeType.REMOVE, CascadeType.PERSIST}, fetch = FetchType.LAZY)
-    private List<SecondMetalImage> secondImages = new ArrayList<>();
+    private List<SecondMetalImage> secondMetalImages = new ArrayList<>();
 
     @Embedded
     private FeatureRank featureRank;
@@ -46,13 +47,20 @@ public class SecondMetal extends BaseEntity {
         this.featureRank = featureRank.updateRank(featureRank);
     }
 
+    public List<String> getImageUrlsByCategory(ImageCategory category) {
+        return this.secondMetalImages.stream()
+                .filter(image -> image.getCategory() == category)
+                .map(SecondMetalImage::getImageUrl)
+                .toList();
+    }
+
     public void delete() {
         this.deleteEnum = DeleteEnum.DELETE;
     }
 
     public List<String> getImageUrls() {
         List<String> imageUrl = new ArrayList<>();
-        secondImages.forEach(images -> imageUrl.add(images.getImageUrl()));
+        secondMetalImages.forEach(images -> imageUrl.add(images.getImageUrl()));
         return imageUrl;
     }
 }

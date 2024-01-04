@@ -4,6 +4,8 @@ import com.capstone.fxteam.constant.dto.ApiResponse;
 import com.capstone.fxteam.constant.enums.CustomResponseStatus;
 import com.capstone.fxteam.metal.dto.MetalDto;
 import com.capstone.fxteam.metal.model.enums.ImageCategory;
+import com.capstone.fxteam.metal.service.MetalService;
+import com.capstone.fxteam.metal.service.chat.ChatService;
 import com.capstone.fxteam.metal.service.firstMetal.FirstMetalService;
 import com.capstone.fxteam.metal.service.image.S3Service;
 import com.capstone.fxteam.metal.service.secondMetal.SecondMetalService;
@@ -25,8 +27,10 @@ public class MetalController {
     private final FirstMetalService firstMetalService;
     private final SecondMetalService secondMetalService;
     private final S3Service s3Service;
+    private final ChatService chatService;
+    private final MetalService metalService;
 
-    @PostMapping("/first-metal")
+    @PostMapping("/member/first-metal")
     public ResponseEntity<ApiResponse<MetalDto.MetalPostResponseDto>> postFirstMetal(
             @RequestPart("firstMetalPostRequestDto") MetalDto.FirstMetalPostRequestDto firstMetalPostRequestDto,
             @RequestPart(value = "images", required = false) List<MultipartFile> images) {
@@ -35,15 +39,15 @@ public class MetalController {
         return ResponseEntity.ok().body(ApiResponse.createSuccess(metalPostResponseDto, CustomResponseStatus.SUCCESS));
     }
 
-    @PostMapping("/second-metal")
+    @PostMapping("/member/second-metal")
     public ResponseEntity<ApiResponse<MetalDto.MetalPostResponseDto>> postSecondMetal(
             @RequestPart("secondMetalPostRequestDto") MetalDto.SecondMetalPostRequestDto secondMetalPostRequestDto,
-            @RequestPart("mechaImage") List<MultipartFile> mechanicalPropertiesImage,
+            @RequestPart("mechaFile") List<MultipartFile> mechanicalPropertiesExcelFile,
             @RequestPart("microImage") List<MultipartFile> microstructureImage,
             @RequestPart("conditionImage") List<MultipartFile> conditionDiagramImage
     ) {
         Map<ImageCategory, List<String>> imageUrlsWithCategory = new HashMap<>();
-        imageUrlsWithCategory.put(ImageCategory.MECHANICAL_PROPERTIES, s3Service.uploadFile(mechanicalPropertiesImage));
+        imageUrlsWithCategory.put(ImageCategory.MECHANICAL_PROPERTIES, s3Service.uploadFile(mechanicalPropertiesExcelFile));
         imageUrlsWithCategory.put(ImageCategory.MICROSTRUCTURE, s3Service.uploadFile(microstructureImage));
         imageUrlsWithCategory.put(ImageCategory.CONDITION_DIAGRAM, s3Service.uploadFile(conditionDiagramImage));
 
@@ -51,7 +55,7 @@ public class MetalController {
         return ResponseEntity.ok().body(ApiResponse.createSuccess(metalPostResponseDto, CustomResponseStatus.SUCCESS));
     }
 
-    @PutMapping("/first-metal/{metalId}")
+    @PutMapping("/member/first-metal/{metalId}")
     public ResponseEntity<ApiResponse<MetalDto.MetalPostResponseDto>> updateFirstMetal(
             @PathVariable Long metalId,
             @RequestPart("firstMetalPostRequestDto") MetalDto.FirstMetalPostRequestDto firstMetalPostRequestDto,
@@ -61,21 +65,29 @@ public class MetalController {
         return ResponseEntity.ok().body(ApiResponse.createSuccess(metalPostResponseDto, CustomResponseStatus.SUCCESS));
     }
 
-    @PutMapping("/second-metal/{metalId}")
+    @PutMapping("/member/second-metal/{metalId}")
     public ResponseEntity<ApiResponse<MetalDto.MetalPostResponseDto>> updateSecondMetal(
             @PathVariable Long metalId,
             @RequestPart(value = "secondMetalUpdateRequestDto") MetalDto.SecondMetalUpdateRequestDto secondMetalUpdateRequestDto,
-            @RequestPart(value ="mechaImage", required = false) List<MultipartFile> mechanicalPropertiesImage,
+            @RequestPart(value ="mechaFile", required = false) List<MultipartFile> mechanicalPropertiesExcelFile,
             @RequestPart(value ="microImage", required = false) List<MultipartFile> microstructureImage,
             @RequestPart(value ="conditionImage", required = false) List<MultipartFile> conditionDiagramImage
     ) {
         Map<ImageCategory, List<MultipartFile>> images = new HashMap<>();
-        images.put(ImageCategory.MECHANICAL_PROPERTIES, mechanicalPropertiesImage);
+        images.put(ImageCategory.MECHANICAL_PROPERTIES, mechanicalPropertiesExcelFile);
         images.put(ImageCategory.MICROSTRUCTURE, microstructureImage);
         images.put(ImageCategory.CONDITION_DIAGRAM, conditionDiagramImage);
 
         MetalDto.MetalPostResponseDto metalPostResponseDto = secondMetalService.updateMetal(metalId, secondMetalUpdateRequestDto, images);
 
         return ResponseEntity.ok().body(ApiResponse.createSuccess(metalPostResponseDto, CustomResponseStatus.SUCCESS));
+    }
+
+    @GetMapping("/user/question")
+    public ResponseEntity<ApiResponse<List<MetalDto.QuestionResponseDto>>> getMetalFromQuestion(@RequestBody String question){
+        String feature = chatService.chatResponse(question);
+        log.info("feature = " + feature);
+        List<MetalDto.QuestionResponseDto> metalInfo = metalService.getMetalInfoByFeature(feature);
+        return ResponseEntity.ok().body(ApiResponse.createSuccess(metalInfo, CustomResponseStatus.SUCCESS));
     }
 }

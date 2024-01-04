@@ -73,7 +73,7 @@ public class SecondMetalServiceImpl implements SecondMetalService {
         }
 
         // DB에서 이미지 삭제 (Soft Delete)
-        List<SecondMetalImage> secondImages = secondMetal.getSecondImages();
+        List<SecondMetalImage> secondImages = secondMetal.getSecondMetalImages();
         secondImages.forEach(SecondMetalImage::delete);
 
         // s3에 이미지 업로드 후 DB에 생성

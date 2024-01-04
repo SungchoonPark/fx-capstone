@@ -40,10 +40,7 @@ public class FirstMetal extends BaseEntity {
 
     public List<String> getMetalImageUrl() {
         List<String> imageUrls = new ArrayList<>();
-
-        metalImages.stream()
-                .forEach(image -> imageUrls.add(image.getImageUrl()));
-
+        metalImages.forEach(image -> imageUrls.add(image.getImageUrl()));
         return imageUrls;
     }
 
