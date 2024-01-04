@@ -16,7 +16,7 @@ public interface BoardService {
             String loginId
     );
 
-    Page<BoardDto.BoardGetResponseDto> getBoars(String category);
+    List<BoardDto.BoardGetResponseDto> getBoars(String category);
 
     BoardDto.BoardDetailGetResponseDto getBoardDetail(Long boardId);
 

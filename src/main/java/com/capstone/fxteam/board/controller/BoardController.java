@@ -33,8 +33,8 @@ public class BoardController {
     }
 
     @GetMapping("/user/{category}/boards")
-    public ResponseEntity<ApiResponse<Page<BoardDto.BoardGetResponseDto>>> getBoars(@PathVariable String category) {
-        Page<BoardDto.BoardGetResponseDto> boardDtos = boardService.getBoars(category);
+    public ResponseEntity<ApiResponse<List<BoardDto.BoardGetResponseDto>>> getBoars(@PathVariable String category) {
+        List<BoardDto.BoardGetResponseDto> boardDtos = boardService.getBoars(category);
         return ResponseEntity.ok().body(ApiResponse.createSuccess(boardDtos, CustomResponseStatus.SUCCESS));
     }
 
