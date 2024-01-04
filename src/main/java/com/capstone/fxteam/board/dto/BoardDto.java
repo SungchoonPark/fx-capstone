@@ -60,6 +60,7 @@ public class BoardDto {
         private String writer;
         private int viewCount;
         private LocalDate createDate;
+        private List<String> fileUrls;
     }
 
     @Data

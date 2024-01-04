@@ -54,6 +54,7 @@ public class BoardServiceImpl implements BoardService {
         Pageable pageable = PageRequest.of(0, 10, sort);
         Page<Board> boards = boardRepository.findByDeleteStatusAndBoardCategory(DeleteEnum.NOT_DELETE, boardCategory, pageable);
 
+
         return boards.map(board ->
             BoardDto.BoardGetResponseDto.builder()
                     .boardId(board.getBoardId())
@@ -61,6 +62,7 @@ public class BoardServiceImpl implements BoardService {
                     .writer(board.getMember().getNickname())
                     .viewCount(board.getViewCount())
                     .createDate(board.getCreatedDate())
+                    .fileUrls(board.getBoardFileUrl())
                     .build()
         );
     }
