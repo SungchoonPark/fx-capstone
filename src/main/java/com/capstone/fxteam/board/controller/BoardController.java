@@ -5,6 +5,7 @@ import com.capstone.fxteam.board.service.BoardService;
 import com.capstone.fxteam.constant.dto.ApiResponse;
 import com.capstone.fxteam.constant.enums.CustomResponseStatus;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -16,6 +17,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 @RequestMapping("/api/v1")
 public class BoardController {
     private final BoardService boardService;
@@ -23,7 +25,7 @@ public class BoardController {
     @PostMapping("/user/board")
     public ResponseEntity<ApiResponse<BoardDto.BoardPostResponseDto>> postBoard(
             @RequestPart("boardPostRequest") BoardDto.BoardPostRequestDto boardPostRequestDto,
-            @RequestPart("files") List<MultipartFile> files,
+            @RequestPart(value = "files", required = false) List<MultipartFile> files,
             Authentication authentication
     ) {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();

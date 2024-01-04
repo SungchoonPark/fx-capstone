@@ -36,6 +36,9 @@ public class BoardServiceImpl implements BoardService {
         Member member = findMemberByLoginId(loginId);
 
         Board savedBoard = boardRepository.save(boardPostRequestDto.toEntity(member));
+        if(files == null) {
+            return new BoardDto.BoardPostResponseDto(savedBoard.getBoardId());
+        }
 
         List<String> fileUrls = s3Service.uploadFile(files);
 
