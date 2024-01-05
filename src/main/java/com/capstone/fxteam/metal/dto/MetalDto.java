@@ -5,6 +5,7 @@ import com.capstone.fxteam.metal.model.FeatureRank;
 import com.capstone.fxteam.metal.model.FirstMetal;
 import com.capstone.fxteam.metal.model.SecondMetal;
 
+import com.capstone.fxteam.metal.model.image.MicroImage;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -154,5 +155,38 @@ public class MetalDto {
         private List<String> mechaExcelUrls;
     }
 
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class MicroImagePostRequestDto {
+        private String secondMetalName;
+        private String imageTitle;
+        private String imageCharacteristic;
+
+        public MicroImage toEntity(SecondMetal secondMetal, String imageUrl) {
+            return MicroImage.builder()
+                    .imageTitle(imageTitle)
+                    .imageCharacteristic(imageCharacteristic)
+                    .deleteEnum(DeleteEnum.NOT_DELETE)
+                    .secondMetal(secondMetal)
+                    .imageUrl(imageUrl)
+                    .build();
+        }
+    }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class MicroImagePostResponseDto {
+        private String imageTitle;
+
+        public static MicroImagePostResponseDto toDto(String imageTitle) {
+            return MicroImagePostResponseDto.builder()
+                    .imageTitle(imageTitle)
+                    .build();
+        }
+    }
 
 }

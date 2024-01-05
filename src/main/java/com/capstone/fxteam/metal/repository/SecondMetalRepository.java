@@ -9,4 +9,5 @@ import java.util.Optional;
 
 public interface SecondMetalRepository extends JpaRepository<SecondMetal, Long> {
     Optional<List<SecondMetal>> findByFirstMetal(FirstMetal firstMetal);
+    Optional<SecondMetal> findByMetalName(String secondMetalName);
 }

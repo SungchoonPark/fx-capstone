@@ -26,6 +26,7 @@ public class SecondMetal extends BaseEntity {
 
     private String metalName;
 
+    @Column(columnDefinition = "LONGTEXT")
     private String metalCharacteristic;
 
     @Enumerated(EnumType.STRING)

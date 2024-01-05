@@ -6,22 +6,26 @@ import com.capstone.fxteam.metal.model.SecondMetal;
 import com.capstone.fxteam.metal.model.enums.ImageCategory;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Getter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-public class SecondMetalImage extends BaseEntity {
-
+public class MicroImage extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long secondMetalImageId;
-    private String imageUrl;
+    private long microImageId;
 
-    @Enumerated(EnumType.STRING)
-    private ImageCategory category;
+    private String imageTitle;
+
+    @Column(columnDefinition = "LONGTEXT")
+    private String imageCharacteristic;
+
+    private String imageUrl;
 
     @Enumerated(EnumType.STRING)
     private DeleteEnum deleteEnum;
@@ -30,22 +34,7 @@ public class SecondMetalImage extends BaseEntity {
     @JoinColumn(name = "secondMetalId")
     private SecondMetal secondMetal;
 
-    private SecondMetalImage(ImageCategory category, String imageUrl, SecondMetal secondMetal) {
-        this.category = category;
-        this.imageUrl = imageUrl;
-        this.secondMetal = secondMetal;
-        this.deleteEnum = DeleteEnum.NOT_DELETE;
-    }
-
-    public static SecondMetalImage from(ImageCategory category, String imageUrl, SecondMetal secondMetal) {
-        return new SecondMetalImage(category, imageUrl, secondMetal);
-    }
-
     public void delete() {
         this.deleteEnum = DeleteEnum.DELETE;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
     }
 }

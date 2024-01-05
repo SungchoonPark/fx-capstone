@@ -7,6 +7,7 @@ import com.capstone.fxteam.metal.model.enums.ImageCategory;
 import com.capstone.fxteam.metal.service.MetalService;
 import com.capstone.fxteam.metal.service.chat.ChatService;
 import com.capstone.fxteam.metal.service.firstMetal.FirstMetalService;
+import com.capstone.fxteam.metal.service.image.MicroImageService;
 import com.capstone.fxteam.metal.service.image.S3Service;
 import com.capstone.fxteam.metal.service.secondMetal.SecondMetalService;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,7 @@ public class MetalController {
     private final S3Service s3Service;
     private final ChatService chatService;
     private final MetalService metalService;
+    private final MicroImageService microImageService;
 
     @PostMapping("/member/first-metal")
     public ResponseEntity<ApiResponse<MetalDto.MetalPostResponseDto>> postFirstMetal(
@@ -43,12 +45,10 @@ public class MetalController {
     public ResponseEntity<ApiResponse<MetalDto.MetalPostResponseDto>> postSecondMetal(
             @RequestPart("secondMetalPostRequestDto") MetalDto.SecondMetalPostRequestDto secondMetalPostRequestDto,
             @RequestPart("mechaFile") List<MultipartFile> mechanicalPropertiesExcelFile,
-            @RequestPart("microImage") List<MultipartFile> microstructureImage,
             @RequestPart("conditionImage") List<MultipartFile> conditionDiagramImage
     ) {
         Map<ImageCategory, List<String>> imageUrlsWithCategory = new HashMap<>();
         imageUrlsWithCategory.put(ImageCategory.MECHANICAL_PROPERTIES, s3Service.uploadFile(mechanicalPropertiesExcelFile));
-        imageUrlsWithCategory.put(ImageCategory.MICROSTRUCTURE, s3Service.uploadFile(microstructureImage));
         imageUrlsWithCategory.put(ImageCategory.CONDITION_DIAGRAM, s3Service.uploadFile(conditionDiagramImage));
 
         MetalDto.MetalPostResponseDto metalPostResponseDto = secondMetalService.postMetal(secondMetalPostRequestDto, imageUrlsWithCategory);
@@ -70,12 +70,10 @@ public class MetalController {
             @PathVariable Long metalId,
             @RequestPart(value = "secondMetalUpdateRequestDto") MetalDto.SecondMetalUpdateRequestDto secondMetalUpdateRequestDto,
             @RequestPart(value ="mechaFile", required = false) List<MultipartFile> mechanicalPropertiesExcelFile,
-            @RequestPart(value ="microImage", required = false) List<MultipartFile> microstructureImage,
             @RequestPart(value ="conditionImage", required = false) List<MultipartFile> conditionDiagramImage
     ) {
         Map<ImageCategory, List<MultipartFile>> images = new HashMap<>();
         images.put(ImageCategory.MECHANICAL_PROPERTIES, mechanicalPropertiesExcelFile);
-        images.put(ImageCategory.MICROSTRUCTURE, microstructureImage);
         images.put(ImageCategory.CONDITION_DIAGRAM, conditionDiagramImage);
 
         MetalDto.MetalPostResponseDto metalPostResponseDto = secondMetalService.updateMetal(metalId, secondMetalUpdateRequestDto, images);
@@ -86,8 +84,16 @@ public class MetalController {
     @GetMapping("/user/question")
     public ResponseEntity<ApiResponse<List<MetalDto.QuestionResponseDto>>> getMetalFromQuestion(@RequestBody String question){
         String feature = chatService.chatResponse(question);
-        log.info("feature = " + feature);
         List<MetalDto.QuestionResponseDto> metalInfo = metalService.getMetalInfoByFeature(feature);
         return ResponseEntity.ok().body(ApiResponse.createSuccess(metalInfo, CustomResponseStatus.SUCCESS));
+    }
+
+    @PostMapping("/member/micro-image")
+    public ResponseEntity<ApiResponse<MetalDto.MicroImagePostResponseDto>> postMicroImage(
+            @RequestPart(value = "microImageRequestDto") MetalDto.MicroImagePostRequestDto requestDto,
+            @RequestPart(value = "microImage") List<MultipartFile> microImage
+    ) {
+        MetalDto.MicroImagePostResponseDto postResponseDto = microImageService.post(requestDto, microImage);
+        return ResponseEntity.ok().body(ApiResponse.createSuccess(postResponseDto, CustomResponseStatus.SUCCESS));
     }
 }
