@@ -82,7 +82,7 @@ public class MetalController {
     }
 
     @GetMapping("/user/question")
-    public ResponseEntity<ApiResponse<List<MetalDto.QuestionResponseDto>>> getMetalFromQuestion(@RequestBody String question){
+    public ResponseEntity<ApiResponse<List<MetalDto.QuestionResponseDto>>> getMetalFromQuestion(@RequestParam String question){
         String feature = chatService.chatResponse(question);
         List<MetalDto.QuestionResponseDto> metalInfo = metalService.getMetalInfoByFeature(feature);
         return ResponseEntity.ok().body(ApiResponse.createSuccess(metalInfo, CustomResponseStatus.SUCCESS));
