@@ -13,8 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -31,35 +31,39 @@ public class MetalServiceImpl implements MetalService {
             throw new CustomException(CustomResponseStatus.USER_NOT_MATCH);
         });
 
-        List<MetalDto.QuestionResponseDto> questionResponseDtos = new ArrayList<>();
-        for (FirstMetal firstMetal : firstMetals) {
-            questionResponseDtos.add(MetalDto.QuestionResponseDto.builder()
-                    .metalName(firstMetal.getMetalName())
-                    .metalCharacteristic(firstMetal.getMetalCharacteristic())
-                    .rank(firstMetal.getFeatureRank().getRank(engFeat))
-                    .firstMetalImages(firstMetal.getMetalImageUrl())
-                    .secondMetalInfos(getSecondMetalInfoByFirstMetal(firstMetal.getSecondMetals(), engFeat))
-                    .build());
-        }
+        return firstMetals.stream()
+                .map(firstMetal -> MetalDto.QuestionResponseDto.builder()
+                        .metalName(firstMetal.getMetalName())
+                        .metalCharacteristic(firstMetal.getMetalCharacteristic())
+                        .rank(firstMetal.getFeatureRank().getRank(engFeat))
+                        .firstMetalImages(firstMetal.getMetalImageUrl())
+                        .secondMetalInfos(getSecondMetalInfoByFirstMetal(firstMetal.getSecondMetals(), engFeat))
+                        .build())
+                .collect(Collectors.toList());
 
-        return questionResponseDtos;
     }
 
     private List<MetalDto.SecondMetalInfoDto> getSecondMetalInfoByFirstMetal(List<SecondMetal> secondMetals, String feature) {
-        List<MetalDto.SecondMetalInfoDto> secondMetalInfoDtos = new ArrayList<>();
+        return secondMetals.stream()
+                .map(secondMetal -> MetalDto.SecondMetalInfoDto.builder()
+                        .metalName(secondMetal.getMetalName())
+                        .metalCharacteristic(secondMetal.getMetalCharacteristic())
+                        .rank(secondMetal.getFeatureRank().getRank(feature))
+                        .mechaExcelUrls(secondMetal.getImageUrlsByCategory(ImageCategory.MECHANICAL_PROPERTIES))
+                        .conditionImageUrls(secondMetal.getImageUrlsByCategory(ImageCategory.CONDITION_DIAGRAM))
+                        .microImageInfos(getMicroImageInfos(secondMetal))
+                        .build())
+                .collect(Collectors.toList());
+    }
 
-        for (SecondMetal secondMetal : secondMetals) {
-            secondMetalInfoDtos.add(MetalDto.SecondMetalInfoDto.builder()
-                            .metalName(secondMetal.getMetalName())
-                            .metalCharacteristic(secondMetal.getMetalCharacteristic())
-                            .rank(secondMetal.getFeatureRank().getRank(feature))
-                            .microImageUrls(secondMetal.getImageUrlsByCategory(ImageCategory.MICROSTRUCTURE))
-                            .mechaExcelUrls(secondMetal.getImageUrlsByCategory(ImageCategory.MECHANICAL_PROPERTIES))
-                            .conditionImageUrls(secondMetal.getImageUrlsByCategory(ImageCategory.CONDITION_DIAGRAM))
-                    .build());
-        }
-
-        return secondMetalInfoDtos;
+    private List<MetalDto.MicroImageInfo> getMicroImageInfos(SecondMetal secondMetal) {
+        return secondMetal.getMicroImages().stream()
+                .map(microImage -> MetalDto.MicroImageInfo.builder()
+                        .imageTitle(microImage.getImageTitle())
+                        .imageCharacteristic(microImage.getImageCharacteristic())
+                        .imageUrl(microImage.getImageUrl())
+                        .build())
+                .collect(Collectors.toList());
     }
 
     private String getFeature(String feature) {

@@ -150,9 +150,19 @@ public class MetalDto {
         private String metalName;
         private String metalCharacteristic;
         private int rank;
-        private List<String> microImageUrls;
         private List<String> conditionImageUrls;
         private List<String> mechaExcelUrls;
+        private List<MicroImageInfo> microImageInfos;
+    }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class MicroImageInfo {
+        private String imageTitle;
+        private String imageCharacteristic;
+        private String imageUrl;
     }
 
     @Data

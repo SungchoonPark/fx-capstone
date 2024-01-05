@@ -3,6 +3,7 @@ package com.capstone.fxteam.metal.model;
 import com.capstone.fxteam.constant.entity.BaseEntity;
 import com.capstone.fxteam.constant.enums.DeleteEnum;
 import com.capstone.fxteam.metal.model.enums.ImageCategory;
+import com.capstone.fxteam.metal.model.image.MicroImage;
 import com.capstone.fxteam.metal.model.image.SecondMetalImage;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -38,6 +39,9 @@ public class SecondMetal extends BaseEntity {
 
     @OneToMany(mappedBy = "secondMetal", cascade = {CascadeType.REMOVE, CascadeType.PERSIST}, fetch = FetchType.LAZY)
     private List<SecondMetalImage> secondMetalImages = new ArrayList<>();
+
+    @OneToMany(mappedBy = "secondMetal", cascade = {CascadeType.REMOVE, CascadeType.PERSIST}, fetch = FetchType.LAZY)
+    private List<MicroImage> microImages = new ArrayList<>();
 
     @Embedded
     private FeatureRank featureRank;
