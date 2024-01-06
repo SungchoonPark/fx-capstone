@@ -28,6 +28,16 @@ public class ChatService {
         );
 
         message = message + "\nQuestion is " + prompt;
-        return chatgptService.sendMessage(message).trim();
+        String returnString = chatgptService.sendMessage(message).trim();
+        log.info("returnString : " + returnString);
+
+        for (String feature : features) {
+            if (returnString.contains(feature)) {
+                returnString = feature;
+                break;
+            }
+        }
+
+        return returnString;
     }
 }
