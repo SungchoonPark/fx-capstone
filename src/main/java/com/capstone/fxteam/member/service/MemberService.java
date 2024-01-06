@@ -7,9 +7,9 @@ public interface MemberService {
 
     MemberDto.SignUpResponseDto signUp(MemberDto.SignUpRequestDto joinDto);
 
-    MemberDto.CheckDuplicationResponseDto checkIdDuplication(MemberDto.CheckIdDuplicationRequestDto idDuplicationRequestDto);
-    MemberDto.CheckDuplicationResponseDto checkEmailDuplication(MemberDto.CheckEmailDuplicationRequestDto emailDuplicationRequestDto);
-    MemberDto.CheckDuplicationResponseDto checkNicknameDuplication(MemberDto.CheckNicknameDuplicationRequestDto nicknameDuplicationRequestDto);
+    MemberDto.CheckDuplicationResponseDto checkIdDuplication(String id);
+    MemberDto.CheckDuplicationResponseDto checkEmailDuplication(String email);
+    MemberDto.CheckDuplicationResponseDto checkNicknameDuplication(String nickname);
     MemberDto.SignInResponseDto signIn(MemberDto.SignInRequestDto signDto);
     void logout(String accessToken);
     MemberDto.FindLoginIdResponseDto findLoginId(MemberDto.FindLoginIdRequestDto findLoginIdRequestDto);

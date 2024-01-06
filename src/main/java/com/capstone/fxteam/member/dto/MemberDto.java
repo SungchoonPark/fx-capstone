@@ -74,7 +74,7 @@ public class MemberDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class CheckDuplicationResponseDto {
-        private boolean isDuplication;
+        private String responseMessage;
     }
 
     @Data
@@ -101,9 +101,11 @@ public class MemberDto {
         private String accessToken;
         private String refreshToken;
         private Long accessTokenExpirationTime;
+        private String nickname;
 
-        public static SignInResponseDto toDto(String accessToken, String refreshToken, long accessTokenExpirationTime) {
+        public static SignInResponseDto toDto(String nickname, String accessToken, String refreshToken, long accessTokenExpirationTime) {
             return SignInResponseDto.builder()
+                    .nickname(nickname)
                     .accessToken(accessToken)
                     .refreshToken(refreshToken)
                     .accessTokenExpirationTime(accessTokenExpirationTime)

@@ -29,19 +29,19 @@ public class SocialLoginServiceImpl implements SocialLoginService{
     @Override
     public MemberDto.SignInResponseDto login(OAuthLoginParams params) {
         OAuthInfoResponse oAuthInfoResponse = requestOAuthInfoService.request(params);
-        Member findOrCreateMember = findOrCreateMember(oAuthInfoResponse);
-        String accessToken = jwtUtils.createToken(findOrCreateMember.getEmail(), JwtUtils.TOKEN_VALID_TIME);
-        String refreshToken = redisUtils.getData("RT:" + findOrCreateMember.getEmail());
+        Member member = findOrCreateMember(oAuthInfoResponse);
+        String accessToken = jwtUtils.createToken(member.getEmail(), JwtUtils.TOKEN_VALID_TIME);
+        String refreshToken = redisUtils.getData("RT:" + member.getEmail());
 
         if (refreshToken == null) {
             // refreshToken이 존재하지 않는다면 설정해줘야함
-            String newRefreshToken = jwtUtils.createToken(findOrCreateMember.getEmail(), JwtUtils.REFRESH_TOKEN_VALID_TIME);
+            String newRefreshToken = jwtUtils.createToken(member.getEmail(), JwtUtils.REFRESH_TOKEN_VALID_TIME);
             log.info("newRefreshToken : " + newRefreshToken);
-            redisUtils.setDataExpire("RT:" + findOrCreateMember.getEmail(), newRefreshToken, JwtUtils.REFRESH_TOKEN_VALID_TIME_IN_REDIS);
+            redisUtils.setDataExpire("RT:" + member.getEmail(), newRefreshToken, JwtUtils.REFRESH_TOKEN_VALID_TIME_IN_REDIS);
             refreshToken = newRefreshToken;
         }
 
-        return MemberDto.SignInResponseDto.toDto(accessToken, refreshToken, JwtUtils.TOKEN_VALID_TIME);
+        return MemberDto.SignInResponseDto.toDto(member.getNickname(), accessToken, refreshToken, JwtUtils.TOKEN_VALID_TIME);
     }
 
     private Member findOrCreateMember(OAuthInfoResponse oAuthInfoResponse) {

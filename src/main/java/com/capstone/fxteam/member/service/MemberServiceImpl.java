@@ -49,58 +49,51 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public MemberDto.CheckDuplicationResponseDto checkIdDuplication(MemberDto.CheckIdDuplicationRequestDto idDuplicationRequestDto) {
-        Optional<Member> memberByLoginId = memberRepository.findByLoginId(idDuplicationRequestDto.getLoginId());
-        return isEmpty(memberByLoginId);
+    public MemberDto.CheckDuplicationResponseDto checkIdDuplication(String id) {
+        Optional<Member> memberByLoginId = memberRepository.findByLoginId(id);
+        return isEmpty(memberByLoginId, "아이디");
     }
 
     @Override
-    public MemberDto.CheckDuplicationResponseDto checkEmailDuplication(MemberDto.CheckEmailDuplicationRequestDto emailDuplicationRequestDto) {
-        Optional<Member> memberByEmail = memberRepository.findByEmail(emailDuplicationRequestDto.getEmail());
+    public MemberDto.CheckDuplicationResponseDto checkEmailDuplication(String email) {
+        Optional<Member> memberByEmail = memberRepository.findByEmail(email);
 
-        return isEmpty(memberByEmail);
+        return isEmpty(memberByEmail, "이메일");
     }
 
     @Override
-    public MemberDto.CheckDuplicationResponseDto checkNicknameDuplication(MemberDto.CheckNicknameDuplicationRequestDto nicknameDuplicationRequestDto) {
-        Optional<Member> memberByNickname = memberRepository.findByNickname(nicknameDuplicationRequestDto.getNickname());
+    public MemberDto.CheckDuplicationResponseDto checkNicknameDuplication(String nickname) {
+        Optional<Member> memberByNickname = memberRepository.findByNickname(nickname);
 
-        return isEmpty(memberByNickname);
-
+        return isEmpty(memberByNickname, "닉네임");
     }
 
     @Override
     public MemberDto.SignInResponseDto signIn(MemberDto.SignInRequestDto signDto) {
-        Optional<Member> findMember = memberRepository.findByLoginId(signDto.getLoginId());
-
-        /***
-         * id가 틀린 경우
-         */
-        if (findMember.isEmpty()) {
+        Member findMember = memberRepository.findByLoginId(signDto.getLoginId()).orElseThrow(() -> {
             throw new CustomException(CustomResponseStatus.LOGIN_FAILED_LOGINID);
-        }
+
+        });
 
         /***
          * id는 맞았지만 password가 틀린 경우
          */
-        System.out.println("signDto password = " + signDto.getPassword());
-        System.out.println("findMember = " + findMember.get().getPassword());
-        if (!passwordEncoder.matches(signDto.getPassword(), findMember.get().getPassword())) {
+        if (!passwordEncoder.matches(signDto.getPassword(), findMember.getPassword())) {
             throw new CustomException(CustomResponseStatus.LOGIN_FAILED_PWD);
         }
 
-        String accessToken = jwtUtils.createToken(findMember.get().getEmail(), JwtUtils.TOKEN_VALID_TIME);
-        String refreshToken = redisUtils.getData("RT:" + findMember.get().getEmail());
+        String accessToken = jwtUtils.createToken(findMember.getEmail(), JwtUtils.TOKEN_VALID_TIME);
+        String refreshToken = redisUtils.getData("RT:" + findMember.getEmail());
 
         if (refreshToken == null) {
             // refreshToken이 존재하지 않는다면 설정해줘야함
-            String newRefreshToken = jwtUtils.createToken(findMember.get().getEmail(), JwtUtils.REFRESH_TOKEN_VALID_TIME);
+            String newRefreshToken = jwtUtils.createToken(findMember.getEmail(), JwtUtils.REFRESH_TOKEN_VALID_TIME);
             log.info("newRefreshToken : " + newRefreshToken);
-            redisUtils.setDataExpire("RT:" + findMember.get().getEmail(), newRefreshToken, JwtUtils.REFRESH_TOKEN_VALID_TIME_IN_REDIS);
+            redisUtils.setDataExpire("RT:" + findMember.getEmail(), newRefreshToken, JwtUtils.REFRESH_TOKEN_VALID_TIME_IN_REDIS);
             refreshToken = newRefreshToken;
         }
 
-        return MemberDto.SignInResponseDto.toDto(accessToken, refreshToken, JwtUtils.TOKEN_VALID_TIME);
+        return MemberDto.SignInResponseDto.toDto(findMember.getNickname() ,accessToken, refreshToken, JwtUtils.TOKEN_VALID_TIME);
     }
 
     @Override
@@ -202,14 +195,14 @@ public class MemberServiceImpl implements MemberService {
         return memberRepository.findByEmail(email).isPresent();
     }
 
-    private MemberDto.CheckDuplicationResponseDto isEmpty(Optional<Member> member) {
+    private MemberDto.CheckDuplicationResponseDto isEmpty(Optional<Member> member, String dupleCategory) {
         if (member.isEmpty()) {
             return MemberDto.CheckDuplicationResponseDto.builder()
-                    .isDuplication(false)
+                    .responseMessage("사용가능한 "+dupleCategory+"입니다.")
                     .build();
         }
         return MemberDto.CheckDuplicationResponseDto.builder()
-                .isDuplication(true)
+                .responseMessage("중복된 "+dupleCategory+"입니다.")
                 .build();
     }
 
