@@ -6,7 +6,7 @@ import com.capstone.fxteam.constant.dto.ApiResponse;
 import com.capstone.fxteam.constant.enums.CustomResponseStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,7 +22,7 @@ import java.util.List;
 public class BoardController {
     private final BoardService boardService;
 
-    @PostMapping("/user/board")
+    @PostMapping("/member/board")
     public ResponseEntity<ApiResponse<BoardDto.BoardPostResponseDto>> postBoard(
             @RequestPart("boardPostRequest") BoardDto.BoardPostRequestDto boardPostRequestDto,
             @RequestPart(value = "files", required = false) List<MultipartFile> files,
@@ -34,19 +34,19 @@ public class BoardController {
         return ResponseEntity.ok().body(ApiResponse.createSuccess(postResponse, CustomResponseStatus.SUCCESS));
     }
 
-    @GetMapping("/user/{category}/boards")
+    @GetMapping("/member/{category}/boards")
     public ResponseEntity<ApiResponse<List<BoardDto.BoardGetResponseDto>>> getBoars(@PathVariable String category) {
         List<BoardDto.BoardGetResponseDto> boardDtos = boardService.getBoars(category);
         return ResponseEntity.ok().body(ApiResponse.createSuccess(boardDtos, CustomResponseStatus.SUCCESS));
     }
 
-    @GetMapping("/user/board/{boardId}")
+    @GetMapping("/member/board/{boardId}")
     public ResponseEntity<ApiResponse<BoardDto.BoardDetailGetResponseDto>> getBoardDetail(@PathVariable long boardId) {
         BoardDto.BoardDetailGetResponseDto boardDetail = boardService.getBoardDetail(boardId);
         return ResponseEntity.ok().body(ApiResponse.createSuccess(boardDetail, CustomResponseStatus.SUCCESS));
     }
 
-    @PutMapping("/user/board/{boardId}")
+    @PutMapping("/member/board/{boardId}")
     public ResponseEntity<ApiResponse<BoardDto.BoardPostResponseDto>> updateBoard(
             @PathVariable long boardId,
             @RequestPart("boardPostRequest") BoardDto.BoardPostRequestDto boardPostRequestDto,
@@ -56,7 +56,7 @@ public class BoardController {
         return ResponseEntity.ok().body(ApiResponse.createSuccess(updateResponseDto, CustomResponseStatus.SUCCESS));
     }
 
-    @DeleteMapping("/user/board/{boardId}")
+    @DeleteMapping("/member/board/{boardId}")
     public ResponseEntity<ApiResponse<String>> deleteBoard(
             @PathVariable long boardId,
             Authentication authentication

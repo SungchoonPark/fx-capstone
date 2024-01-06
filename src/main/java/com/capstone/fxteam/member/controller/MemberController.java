@@ -82,7 +82,7 @@ public class MemberController {
         return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(CustomResponseStatus.SUCCESS));
     }
 
-    @PutMapping("/user/pwd")
+    @PutMapping("/member/pwd")
     public ResponseEntity<ApiResponse<String>> normalChangePassword(
             @RequestBody MemberDto.normalChangePasswordRequestDto changePasswordDto,
             Authentication authentication
