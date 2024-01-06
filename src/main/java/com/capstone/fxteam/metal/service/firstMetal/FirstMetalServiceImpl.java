@@ -26,27 +26,27 @@ public class FirstMetalServiceImpl implements FirstMetalService {
     private final S3Service s3Service;
 
     @Override
-    public MetalDto.MetalPostResponseDto postMetal(MetalDto.FirstMetalPostRequestDto firstMetalPostRequestDto, List<String> imageUrls) {
+    public MetalDto.MetalPostAndUpdateResponseDto postMetal(MetalDto.FirstMetalPostAndUpdateRequestDto firstMetalPostRequestDto, List<String> imageUrls) {
         FirstMetal savedFirstMetal = firstMetalRepository.save(firstMetalPostRequestDto.toEntity());
 
         imageUrls.forEach(v -> firstMetalImageRepository.save(FirstMetalImage.from(v, savedFirstMetal)));
 
-        return new MetalDto.MetalPostResponseDto(savedFirstMetal.getMetalName());
+        return new MetalDto.MetalPostAndUpdateResponseDto(savedFirstMetal.getMetalName());
     }
 
     @Override
-    public MetalDto.MetalPostResponseDto updateMetal(Long metalId,
-                                                     MetalDto.FirstMetalPostRequestDto firstMetalPostRequestDto,
-                                                     List<MultipartFile> images)
+    public MetalDto.MetalPostAndUpdateResponseDto updateMetal(Long metalId,
+                                                              MetalDto.FirstMetalPostAndUpdateRequestDto firstMetalUpdateRequestDto,
+                                                              List<MultipartFile> images)
     {
         FirstMetal firstMetal = firstMetalRepository.findById(metalId).orElseThrow(() -> {
             throw new CustomException(CustomResponseStatus.METAL_NOT_FOUND);
         });
 
-        firstMetal.updateFirstMetal(firstMetalPostRequestDto.getMetalName(), firstMetalPostRequestDto.getMetalCharacteristic(), firstMetalPostRequestDto.toFeatureRank());
+        firstMetal.updateFirstMetal(firstMetalUpdateRequestDto.getMetalName(), firstMetalUpdateRequestDto.getMetalCharacteristic(), firstMetalUpdateRequestDto.toFeatureRank());
 
         if(images == null) {
-            return new MetalDto.MetalPostResponseDto(firstMetal.getMetalName());
+            return new MetalDto.MetalPostAndUpdateResponseDto(firstMetal.getMetalName());
         }
 
         // s3 버킷에서 해당 이미지 삭제
@@ -67,6 +67,6 @@ public class FirstMetalServiceImpl implements FirstMetalService {
             firstMetalImageRepository.save(newMetalImage);
         }
 
-        return new MetalDto.MetalPostResponseDto(firstMetal.getMetalName());
+        return new MetalDto.MetalPostAndUpdateResponseDto(firstMetal.getMetalName());
     }
 }

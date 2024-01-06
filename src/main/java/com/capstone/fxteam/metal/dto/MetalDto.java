@@ -18,7 +18,7 @@ public class MetalDto {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class FirstMetalPostRequestDto {
+    public static class FirstMetalPostAndUpdateRequestDto {
         private String metalName;
         private String metalCharacteristic;
         private String metalClassCharacteristic;
@@ -88,11 +88,11 @@ public class MetalDto {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class MetalPostResponseDto {
+    public static class MetalPostAndUpdateResponseDto {
         private String metalName;
 
-        public static MetalPostResponseDto toDto(String metalName) {
-            return MetalPostResponseDto.builder()
+        public static MetalPostAndUpdateResponseDto toDto(String metalName) {
+            return MetalPostAndUpdateResponseDto.builder()
                     .metalName(metalName)
                     .build();
         }

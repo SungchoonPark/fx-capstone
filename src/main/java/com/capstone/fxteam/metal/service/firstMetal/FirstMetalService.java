@@ -6,10 +6,10 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 public interface FirstMetalService {
-    public MetalDto.MetalPostResponseDto postMetal(MetalDto.FirstMetalPostRequestDto firstMetalPostRequestDto,
-                            List<String> imageUrls);
+    MetalDto.MetalPostAndUpdateResponseDto postMetal(MetalDto.FirstMetalPostAndUpdateRequestDto firstMetalPostRequestDto,
+                                                     List<String> imageUrls);
 
-    public MetalDto.MetalPostResponseDto updateMetal(Long metalId,
-                                                     MetalDto.FirstMetalPostRequestDto firstMetalPostRequestDto,
-                                                     List<MultipartFile> images);
+    MetalDto.MetalPostAndUpdateResponseDto updateMetal(Long metalId,
+                                                       MetalDto.FirstMetalPostAndUpdateRequestDto firstMetalUpdateRequestDto,
+                                                       List<MultipartFile> images);
 }

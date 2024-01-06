@@ -32,7 +32,7 @@ public class SecondMetalServiceImpl implements SecondMetalService {
     private final S3Service s3Service;
 
     @Override
-    public MetalDto.MetalPostResponseDto postMetal(
+    public MetalDto.MetalPostAndUpdateResponseDto postMetal(
             MetalDto.SecondMetalPostRequestDto secondMetalPostRequestDto,
             Map<ImageCategory, List<String>> imageUrlsWithCategory) {
         FirstMetal firstMetal = firstMetalRepository.findByMetalName(secondMetalPostRequestDto.getFirstMetalName())
@@ -47,13 +47,13 @@ public class SecondMetalServiceImpl implements SecondMetalService {
             secondMetalImageRepository.save(SecondMetalImage.from(entry.getKey(), entry.getValue().get(0), savedSecondMetal));
         }
 
-        return new MetalDto.MetalPostResponseDto(savedSecondMetal.getMetalName());
+        return new MetalDto.MetalPostAndUpdateResponseDto(savedSecondMetal.getMetalName());
     }
 
     @Override
-    public MetalDto.MetalPostResponseDto updateMetal(Long metalId,
-                                                     MetalDto.SecondMetalUpdateRequestDto secondMetalUpdateRequestDto,
-                                                     Map<ImageCategory, List<MultipartFile>> images
+    public MetalDto.MetalPostAndUpdateResponseDto updateMetal(Long metalId,
+                                                              MetalDto.SecondMetalUpdateRequestDto secondMetalUpdateRequestDto,
+                                                              Map<ImageCategory, List<MultipartFile>> images
                                                      ) {
         SecondMetal secondMetal = secondMetalRepository.findById(metalId).orElseThrow(() -> {
             throw new CustomException(CustomResponseStatus.METAL_NOT_FOUND);
@@ -63,7 +63,7 @@ public class SecondMetalServiceImpl implements SecondMetalService {
 
         // 수정된 이미지가 없는 경우
         if (images == null) {
-            return new MetalDto.MetalPostResponseDto(secondMetal.getMetalName());
+            return new MetalDto.MetalPostAndUpdateResponseDto(secondMetal.getMetalName());
         }
 
         // s3에서 이미지 삭제
@@ -85,6 +85,6 @@ public class SecondMetalServiceImpl implements SecondMetalService {
             }
         }
 
-        return new MetalDto.MetalPostResponseDto(secondMetal.getMetalName());
+        return new MetalDto.MetalPostAndUpdateResponseDto(secondMetal.getMetalName());
     }
 }

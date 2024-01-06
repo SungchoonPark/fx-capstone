@@ -8,10 +8,10 @@ import java.util.List;
 import java.util.Map;
 
 public interface SecondMetalService {
-    MetalDto.MetalPostResponseDto postMetal(MetalDto.SecondMetalPostRequestDto secondMetalPostRequestDto,
-                                            Map<ImageCategory, List<String>> imageUrlsWithCategory);
+    MetalDto.MetalPostAndUpdateResponseDto postMetal(MetalDto.SecondMetalPostRequestDto secondMetalPostRequestDto,
+                                                     Map<ImageCategory, List<String>> imageUrlsWithCategory);
 
-    MetalDto.MetalPostResponseDto updateMetal(Long metalId,
-                                              MetalDto.SecondMetalUpdateRequestDto secondMetalUpdateRequestDto,
-                                              Map<ImageCategory, List<MultipartFile>> images);
+    MetalDto.MetalPostAndUpdateResponseDto updateMetal(Long metalId,
+                                                       MetalDto.SecondMetalUpdateRequestDto secondMetalUpdateRequestDto,
+                                                       Map<ImageCategory, List<MultipartFile>> images);
 }
