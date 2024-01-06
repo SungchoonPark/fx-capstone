@@ -29,8 +29,7 @@ public class FirstMetalServiceImpl implements FirstMetalService {
     public MetalDto.MetalPostResponseDto postMetal(MetalDto.FirstMetalPostRequestDto firstMetalPostRequestDto, List<String> imageUrls) {
         FirstMetal savedFirstMetal = firstMetalRepository.save(firstMetalPostRequestDto.toEntity());
 
-        imageUrls.stream()
-                .forEach(v -> firstMetalImageRepository.save(FirstMetalImage.from(v, savedFirstMetal)));
+        imageUrls.forEach(v -> firstMetalImageRepository.save(FirstMetalImage.from(v, savedFirstMetal)));
 
         return new MetalDto.MetalPostResponseDto(savedFirstMetal.getMetalName());
     }

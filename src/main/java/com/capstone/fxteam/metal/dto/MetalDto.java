@@ -21,12 +21,14 @@ public class MetalDto {
     public static class FirstMetalPostRequestDto {
         private String metalName;
         private String metalCharacteristic;
+        private String metalClassCharacteristic;
         private FeatureRank featureRank;
 
         public FirstMetal toEntity() {
             return FirstMetal.builder()
                     .metalName(metalName)
                     .metalCharacteristic(metalCharacteristic)
+                    .metalClassCharacteristic(metalClassCharacteristic)
                     .featureRank(toFeatureRank())
                     .deleteEnum(DeleteEnum.NOT_DELETE)
                     .build();
@@ -138,6 +140,7 @@ public class MetalDto {
         private String metalName;
         private String metalCharacteristic;
         private int rank;
+        private String metalClassCharacteristic;
         private List<String> firstMetalImages;
         private List<SecondMetalInfoDto> secondMetalInfos;
     }

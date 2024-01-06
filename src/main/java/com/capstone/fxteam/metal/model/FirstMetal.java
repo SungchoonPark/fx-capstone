@@ -27,6 +27,9 @@ public class FirstMetal extends BaseEntity {
     @Column(columnDefinition = "LONGTEXT")
     private String metalCharacteristic;
 
+    @Column(columnDefinition = "LONGTEXT")
+    private String metalClassCharacteristic;
+
     @Enumerated(EnumType.STRING)
     private DeleteEnum deleteEnum;
 

@@ -27,7 +27,7 @@ public final class JwtUtils {
     @Value("${jwt.security.key}")
     private String SECRET_KEY;
 
-    public static final long TOKEN_VALID_TIME = 1000L * 60 * 5; // 5분
+    public static final long TOKEN_VALID_TIME = 1000L * 60 * 5 * 5; // 5분
     public static final long REFRESH_TOKEN_VALID_TIME = 1000L * 60 * 60 * 144; // 일주일
     public static final long REFRESH_TOKEN_VALID_TIME_IN_REDIS = 60 * 60 * 24 * 7; // 일주일 (초)
 
@@ -49,8 +49,6 @@ public final class JwtUtils {
 
     public Authentication getAuthentication(String token) {
         UserDetails userDetails = userDetailsService.loadUserByUsername(getEmailInToken(token));
-        log.info("userDetails.getUsername : " + userDetails.getUsername());
-        log.info("userDetails.getPassword : " + userDetails.getPassword());
         log.info("getAuthorities() : " + userDetails.getAuthorities().toString());
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }

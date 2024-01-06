@@ -25,7 +25,9 @@ public class MetalServiceImpl implements MetalService {
 
     @Override
     public List<MetalDto.QuestionResponseDto> getMetalInfoByFeature(String feature) {
+        log.info("GPT 대답 : " + feature);
         String engFeat = getFeature(feature);
+        log.info("질문 기반으로 바뀐 feature : " + engFeat);
 
         List<FirstMetal> firstMetals = firstMetalRepository.findByDeleteEnum(DeleteEnum.NOT_DELETE).orElseThrow(() -> {
             throw new CustomException(CustomResponseStatus.USER_NOT_MATCH);
@@ -35,6 +37,7 @@ public class MetalServiceImpl implements MetalService {
                 .map(firstMetal -> MetalDto.QuestionResponseDto.builder()
                         .metalName(firstMetal.getMetalName())
                         .metalCharacteristic(firstMetal.getMetalCharacteristic())
+                        .metalClassCharacteristic(firstMetal.getMetalClassCharacteristic())
                         .rank(firstMetal.getFeatureRank().getRank(engFeat))
                         .firstMetalImages(firstMetal.getMetalImageUrl())
                         .secondMetalInfos(getSecondMetalInfoByFirstMetal(firstMetal.getSecondMetals(), engFeat))
@@ -67,6 +70,7 @@ public class MetalServiceImpl implements MetalService {
     }
 
     private String getFeature(String feature) {
+        log.info("getFeature에 들어온 feature : " + feature);
         return switch (feature) {
             case "강도" -> "strength";
             case "연성" -> "ductility";
