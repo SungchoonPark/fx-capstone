@@ -19,7 +19,6 @@ public class MemberController {
 
     @PostMapping("/sign-up")
     public ResponseEntity<ApiResponse<MemberDto.SignUpResponseDto>> signUp(@RequestBody MemberDto.SignUpRequestDto joinDto) {
-        System.out.println("joinDto = " + joinDto);
         MemberDto.SignUpResponseDto signUpResponseDto = memberService.signUp(joinDto);
         return ResponseEntity.ok().body(ApiResponse.createSuccess(signUpResponseDto, CustomResponseStatus.SUCCESS));
     }
@@ -44,7 +43,6 @@ public class MemberController {
 
     @PostMapping("/sign-in")
     public ResponseEntity<ApiResponse<MemberDto.SignInResponseDto>> signIn(@RequestBody MemberDto.SignInRequestDto signInRequestDto) {
-        System.out.println("signInRequestDto = " + signInRequestDto);
         MemberDto.SignInResponseDto signInResponseDto = memberService.signIn(signInRequestDto);
         return ResponseEntity.ok().body(ApiResponse.createSuccess(signInResponseDto, CustomResponseStatus.SUCCESS));
     }
@@ -57,7 +55,6 @@ public class MemberController {
 
     @GetMapping("/id")
     public ResponseEntity<ApiResponse<MemberDto.FindLoginIdResponseDto>> findLoginId(@RequestBody MemberDto.FindLoginIdRequestDto findLoginIdRequestDto) {
-        System.out.println("findLoginIdRequestDto = " + findLoginIdRequestDto);
         MemberDto.FindLoginIdResponseDto findLoginIdResponseDto = memberService.findLoginId(findLoginIdRequestDto);
         return ResponseEntity.ok().body(ApiResponse.createSuccess(findLoginIdResponseDto, CustomResponseStatus.SUCCESS));
     }
