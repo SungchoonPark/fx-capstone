@@ -1,5 +1,6 @@
 package com.capstone.fxteam.member.service.socialLogin;
 
+import com.capstone.fxteam.constant.enums.DeleteEnum;
 import com.capstone.fxteam.member.dto.MemberDto;
 import com.capstone.fxteam.member.model.Member;
 import com.capstone.fxteam.member.model.enums.OAuthProvider;
@@ -56,6 +57,7 @@ public class SocialLoginServiceImpl implements SocialLoginService{
                 .email(oAuthInfoResponse.getEmail())
                 .nickname(oAuthInfoResponse.getNickname())
                 .role(Role.ROLE_USER)
+                .deleteEnum(DeleteEnum.NOT_DELETE)
                 .provider(OAuthProvider.KAKAO)
                 .build();
 

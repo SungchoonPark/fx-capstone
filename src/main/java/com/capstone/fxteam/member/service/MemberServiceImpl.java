@@ -198,10 +198,12 @@ public class MemberServiceImpl implements MemberService {
     private MemberDto.CheckDuplicationResponseDto isEmpty(Optional<Member> member, String dupleCategory) {
         if (member.isEmpty()) {
             return MemberDto.CheckDuplicationResponseDto.builder()
+                    .duplication(false)
                     .responseMessage("사용가능한 "+dupleCategory+"입니다.")
                     .build();
         }
         return MemberDto.CheckDuplicationResponseDto.builder()
+                .duplication(true)
                 .responseMessage("중복된 "+dupleCategory+"입니다.")
                 .build();
     }

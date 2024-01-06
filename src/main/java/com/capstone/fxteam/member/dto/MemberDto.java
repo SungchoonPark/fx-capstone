@@ -74,6 +74,7 @@ public class MemberDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class CheckDuplicationResponseDto {
+        private boolean duplication;
         private String responseMessage;
     }
 
