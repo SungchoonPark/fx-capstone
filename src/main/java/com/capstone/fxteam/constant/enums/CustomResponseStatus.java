@@ -38,7 +38,8 @@ public enum CustomResponseStatus {
     // 5000 : SERVER ERROR
     INTERNAL_SERVER_ERROR(false, 5000, "내부 서버 오류입니다."),
     MAIL_SEND_FAIL(false, 5001, "메일전송이 실패했습니다."),
-    NO_SUCH_ALGORITHM(false, 5002, "알고리즘 사용 불가능합니다."),;
+    NO_SUCH_ALGORITHM(false, 5002, "알고리즘 사용 불가능합니다."),
+    GPT_NO_ANSWER(false, 5003, "GPT가 답을 주지 않습니다.");
 
     private final boolean isSuccess;
     private final int code;

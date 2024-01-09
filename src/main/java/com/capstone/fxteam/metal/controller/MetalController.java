@@ -1,7 +1,10 @@
 package com.capstone.fxteam.metal.controller;
 
+import com.capstone.fxteam.chat.dto.ChatRequest;
+import com.capstone.fxteam.chat.dto.ChatResponse;
 import com.capstone.fxteam.constant.dto.ApiResponse;
 import com.capstone.fxteam.constant.enums.CustomResponseStatus;
+import com.capstone.fxteam.constant.exception.CustomException;
 import com.capstone.fxteam.metal.dto.MetalDto;
 import com.capstone.fxteam.metal.model.enums.ImageCategory;
 import com.capstone.fxteam.metal.service.MetalService;
@@ -12,8 +15,12 @@ import com.capstone.fxteam.metal.service.image.S3Service;
 import com.capstone.fxteam.metal.service.secondMetal.SecondMetalService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
@@ -31,6 +38,14 @@ public class MetalController {
     private final ChatService chatService;
     private final MetalService metalService;
     private final MicroImageService microImageService;
+
+    @Qualifier("openaiRestTemplate")
+    @Autowired
+    private RestTemplate restTemplate;
+    @Value("${openai.model}")
+    private String model;
+    @Value("${openai.api.url}")
+    private String apiUrl;
 
     @PostMapping("/admin/first-metal")
     public ResponseEntity<ApiResponse<MetalDto.MetalPostAndUpdateResponseDto>> postFirstMetal(
@@ -83,7 +98,16 @@ public class MetalController {
 
     @GetMapping("/member/question")
     public ResponseEntity<ApiResponse<List<MetalDto.QuestionResponseDto>>> getMetalFromQuestion(@RequestParam String question){
-        String feature = chatService.chatResponse(question);
+        String refinedQuestion = chatService.getQuestion(question);
+        // create a request
+        ChatRequest request = new ChatRequest(model, refinedQuestion);
+        // call the API
+        ChatResponse response = restTemplate.postForObject(apiUrl, request, ChatResponse.class);
+
+        if (response == null || response.getChoices() == null || response.getChoices().isEmpty()) {
+            throw new CustomException(CustomResponseStatus.GPT_NO_ANSWER);
+        }
+        String feature = chatService.getAccurateResponse(response);
         List<MetalDto.QuestionResponseDto> metalInfo = metalService.getMetalInfoByFeature(feature);
         return ResponseEntity.ok().body(ApiResponse.createSuccess(metalInfo, CustomResponseStatus.SUCCESS));
     }

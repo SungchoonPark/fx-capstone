@@ -35,8 +35,11 @@ public class SecurityConfig {
             config.setAllowedHeaders(Collections.singletonList("*"));
             config.setAllowedMethods(Collections.singletonList("*"));
             config.setAllowedOriginPatterns(new ArrayList<String>() {{
+                add("https://comforting-zuccutto-f6b34e.netlify.app");
+                add("http://10.10.11.191:3000");
                 add("http://192.168.35.235:3000");
                 add("http://172.31.99.128:3000");
+                add("192.168.172.225:3000");
                 add("http://localhost:3000");
             }});
             config.setAllowCredentials(true);
