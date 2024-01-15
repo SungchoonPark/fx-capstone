@@ -1,8 +1,6 @@
-package com.capstone.fxteam.metal.service.chat;
+package com.capstone.fxteam.chat.service.chat;
 
 import com.capstone.fxteam.chat.dto.ChatResponse;
-import com.capstone.fxteam.chat.model.Message;
-import io.github.flashvayne.chatgpt.service.ChatgptService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -14,8 +12,6 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 public class ChatService {
-    private final ChatgptService chatgptService;
-
     public String getQuestion(String prompt) {
         List<String> features = new ArrayList<>(List.of(
                 "강도", "연성", "내식성", "내열성", "생체적합성", "전기전도성", "열전도성", "자성", "비용절약성"
