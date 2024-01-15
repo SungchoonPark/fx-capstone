@@ -71,15 +71,11 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public MemberDto.SignInResponseDto signIn(MemberDto.SignInRequestDto signDto) {
         Member findMember = memberRepository.findByLoginId(signDto.getLoginId()).orElseThrow(() -> {
-            throw new CustomException(CustomResponseStatus.LOGIN_FAILED_LOGINID);
-
+            throw new CustomException(CustomResponseStatus.LOGIN_FAILED);
         });
 
-        /***
-         * id는 맞았지만 password가 틀린 경우
-         */
         if (!passwordEncoder.matches(signDto.getPassword(), findMember.getPassword())) {
-            throw new CustomException(CustomResponseStatus.LOGIN_FAILED_PWD);
+            throw new CustomException(CustomResponseStatus.LOGIN_FAILED);
         }
 
         String accessToken = jwtUtils.createToken(findMember.getEmail(), JwtUtils.TOKEN_VALID_TIME);
