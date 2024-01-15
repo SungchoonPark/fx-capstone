@@ -8,7 +8,7 @@ import com.capstone.fxteam.constant.exception.CustomException;
 import com.capstone.fxteam.metal.dto.MetalDto;
 import com.capstone.fxteam.metal.model.enums.ImageCategory;
 import com.capstone.fxteam.metal.service.MetalService;
-import com.capstone.fxteam.metal.service.chat.ChatService;
+import com.capstone.fxteam.chat.service.chat.ChatService;
 import com.capstone.fxteam.metal.service.firstMetal.FirstMetalService;
 import com.capstone.fxteam.metal.service.image.MicroImageService;
 import com.capstone.fxteam.metal.service.image.S3Service;
