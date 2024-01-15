@@ -24,9 +24,8 @@ public enum CustomResponseStatus {
 
     // 3000 : UNAUTHORIZED
     EXPIRED_JWT(false, 3000, "만료된 토큰입니다."),
-    LOGIN_FAILED_LOGINID(false, 3001, "아이디가 틀렸습니다."),
-    LOGIN_FAILED_PWD(false, 3002, "비밀번호가 틀렸습니다."),
-    AUTHORIZATION_FAILED(false, 3003, "권한이 없습니다."),
+    LOGIN_FAILED(false, 3001, "일치하는 사용자정보가 존재하지 않습니다."),
+    AUTHORIZATION_FAILED(false, 3002, "권한이 없습니다."),
 
     // 4000 : NOT FOUND
     USER_NOT_FOUND(false, 4000, "사용자 정보를 찾을 수 없습니다."),
