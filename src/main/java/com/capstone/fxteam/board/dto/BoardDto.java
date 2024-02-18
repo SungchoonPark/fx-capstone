@@ -4,6 +4,7 @@ import com.capstone.fxteam.board.model.Board;
 import com.capstone.fxteam.board.model.enums.BoardCategory;
 import com.capstone.fxteam.constant.enums.DeleteEnum;
 import com.capstone.fxteam.member.model.Member;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,9 +21,11 @@ public class BoardDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class BoardPostRequestDto {
+        @NotBlank(message = "제목이 공백입니다.")
         private String title;
+        @NotBlank(message = "내용이 공백입니다.")
         private String content;
-
+        @NotBlank(message = "카테고리가 공백입니다.")
         private String boardCategory;
 
 

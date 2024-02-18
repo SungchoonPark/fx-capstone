@@ -13,6 +13,7 @@ import com.capstone.fxteam.metal.service.firstMetal.FirstMetalService;
 import com.capstone.fxteam.metal.service.image.MicroImageService;
 import com.capstone.fxteam.metal.service.image.S3Service;
 import com.capstone.fxteam.metal.service.secondMetal.SecondMetalService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +50,7 @@ public class MetalController {
 
     @PostMapping("/admin/first-metal")
     public ResponseEntity<ApiResponse<MetalDto.MetalPostAndUpdateResponseDto>> postFirstMetal(
-            @RequestPart("firstMetalPostRequestDto") MetalDto.FirstMetalPostAndUpdateRequestDto firstMetalPostRequestDto,
+            @RequestPart("firstMetalPostRequestDto") @Valid MetalDto.FirstMetalPostAndUpdateRequestDto firstMetalPostRequestDto,
             @RequestPart(value = "images", required = false) List<MultipartFile> images) {
         MetalDto.MetalPostAndUpdateResponseDto metalPostResponseDto = firstMetalService.postMetal(firstMetalPostRequestDto, s3Service.uploadFile(images));
 
@@ -58,7 +59,7 @@ public class MetalController {
 
     @PostMapping("/admin/second-metal")
     public ResponseEntity<ApiResponse<MetalDto.MetalPostAndUpdateResponseDto>> postSecondMetal(
-            @RequestPart("secondMetalPostRequestDto") MetalDto.SecondMetalPostRequestDto secondMetalPostRequestDto,
+            @RequestPart("secondMetalPostRequestDto") @Valid MetalDto.SecondMetalPostRequestDto secondMetalPostRequestDto,
             @RequestPart("mechaFile") List<MultipartFile> mechanicalPropertiesExcelFile,
             @RequestPart("conditionImage") List<MultipartFile> conditionDiagramImage
     ) {
@@ -73,7 +74,7 @@ public class MetalController {
     @PutMapping("/admin/first-metal/{metalId}")
     public ResponseEntity<ApiResponse<MetalDto.MetalPostAndUpdateResponseDto>> updateFirstMetal(
             @PathVariable Long metalId,
-            @RequestPart("firstMetalPostRequestDto") MetalDto.FirstMetalPostAndUpdateRequestDto firstMetalPostRequestDto,
+            @RequestPart("firstMetalPostRequestDto") @Valid MetalDto.FirstMetalPostAndUpdateRequestDto firstMetalPostRequestDto,
             @RequestPart(value = "images", required = false) List<MultipartFile> images) {
         MetalDto.MetalPostAndUpdateResponseDto metalPostResponseDto = firstMetalService.updateMetal(metalId, firstMetalPostRequestDto, images);
 
@@ -83,7 +84,7 @@ public class MetalController {
     @PutMapping("/admin/second-metal/{metalId}")
     public ResponseEntity<ApiResponse<MetalDto.MetalPostAndUpdateResponseDto>> updateSecondMetal(
             @PathVariable Long metalId,
-            @RequestPart(value = "secondMetalUpdateRequestDto") MetalDto.SecondMetalUpdateRequestDto secondMetalUpdateRequestDto,
+            @RequestPart(value = "secondMetalUpdateRequestDto") @Valid MetalDto.SecondMetalUpdateRequestDto secondMetalUpdateRequestDto,
             @RequestPart(value ="mechaFile", required = false) List<MultipartFile> mechanicalPropertiesExcelFile,
             @RequestPart(value ="conditionImage", required = false) List<MultipartFile> conditionDiagramImage
     ) {
@@ -114,7 +115,7 @@ public class MetalController {
 
     @PostMapping("/admin/micro-image")
     public ResponseEntity<ApiResponse<MetalDto.MicroImagePostResponseDto>> postMicroImage(
-            @RequestPart(value = "microImageRequestDto") MetalDto.MicroImagePostRequestDto requestDto,
+            @RequestPart(value = "microImageRequestDto") @Valid MetalDto.MicroImagePostRequestDto requestDto,
             @RequestPart(value = "microImage") List<MultipartFile> microImage
     ) {
         MetalDto.MicroImagePostResponseDto postResponseDto = microImageService.post(requestDto, microImage);

@@ -3,6 +3,8 @@ package com.capstone.fxteam.member.dto;
 import com.capstone.fxteam.constant.enums.DeleteEnum;
 import com.capstone.fxteam.member.model.Member;
 import com.capstone.fxteam.member.model.enums.Role;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 public class MemberDto {
@@ -11,9 +13,15 @@ public class MemberDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class SignUpRequestDto {
+        @NotBlank(message = "아이디가 공백입니다.")
         private String loginId;
+        @NotBlank(message = "비밀번호가 공백입니다.")
         private String password;
+
+        @Email(message = "email 형식에 맞게 작성해주세요.", regexp = "^.+\\.(com|net)$")
+        @NotBlank(message = "이메일이 공백입니다.")
         private String email;
+        @NotBlank(message = "닉네임이 공백입니다.")
         private String nickname;
 
         public Member toEntity() {
@@ -47,6 +55,7 @@ public class MemberDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class CheckIdDuplicationRequestDto {
+        @NotBlank(message = "아이디가 공백입니다.")
         private String loginId;
 
     }
@@ -56,7 +65,8 @@ public class MemberDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class CheckEmailDuplicationRequestDto {
-
+        @NotBlank(message = "이메일이 공백입니다.")
+        @Email(message = "email 형식에 맞게 작성해주세요.")
         private String email;
     }
 
@@ -65,7 +75,7 @@ public class MemberDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class CheckNicknameDuplicationRequestDto {
-
+        @NotBlank(message = "닉네임이 공백입니다.")
         private String nickname;
     }
 
@@ -83,7 +93,9 @@ public class MemberDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class SignInRequestDto {
+        @NotBlank(message = "아이디가 공백입니다.")
         private String loginId;
+        @NotBlank(message = "비밀번호가 공백입니다.")
         private String password;
 
         public Member toEntity() {
@@ -118,6 +130,8 @@ public class MemberDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class FindLoginIdRequestDto {
+        @NotBlank(message = "이메일이 공백입니다.")
+        @Email(message = "email 형식에 맞게 작성해주세요.")
         private String email;
     }
 
@@ -139,7 +153,10 @@ public class MemberDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class forceChangePasswordRequestDto {
+        @NotBlank(message = "이메일이 공백입니다.")
+        @Email(message = "email 형식에 맞게 작성해주세요.")
         private String email;
+        @NotBlank(message = "새 비밀번호가 공백입니다.")
         private String newPassword;
     }
 
@@ -147,7 +164,9 @@ public class MemberDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class normalChangePasswordRequestDto {
+        @NotBlank(message = "기존 비밀번호가 공백입니다.")
         private String currentPassword;
+        @NotBlank(message = "새 비밀번호가 공백입니다.")
         private String newPassword;
     }
 

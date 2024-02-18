@@ -4,6 +4,7 @@ import com.capstone.fxteam.board.dto.BoardDto;
 import com.capstone.fxteam.board.service.BoardService;
 import com.capstone.fxteam.constant.dto.ApiResponse;
 import com.capstone.fxteam.constant.enums.CustomResponseStatus;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -24,7 +25,7 @@ public class BoardController {
 
     @PostMapping("/member/board")
     public ResponseEntity<ApiResponse<BoardDto.BoardPostResponseDto>> postBoard(
-            @RequestPart("boardPostRequest") BoardDto.BoardPostRequestDto boardPostRequestDto,
+            @RequestPart("boardPostRequest") @Valid BoardDto.BoardPostRequestDto boardPostRequestDto,
             @RequestPart(value = "files", required = false) List<MultipartFile> files,
             Authentication authentication
     ) {
@@ -49,7 +50,7 @@ public class BoardController {
     @PutMapping("/member/board/{boardId}")
     public ResponseEntity<ApiResponse<BoardDto.BoardPostResponseDto>> updateBoard(
             @PathVariable long boardId,
-            @RequestPart("boardPostRequest") BoardDto.BoardPostRequestDto boardPostRequestDto,
+            @RequestPart("boardPostRequest") @Valid BoardDto.BoardPostRequestDto boardPostRequestDto,
             @RequestPart("files") List<MultipartFile> files
     ) {
         BoardDto.BoardPostResponseDto updateResponseDto = boardService.update(boardId, boardPostRequestDto, files);

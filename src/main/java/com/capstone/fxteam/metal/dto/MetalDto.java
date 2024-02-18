@@ -6,6 +6,7 @@ import com.capstone.fxteam.metal.model.FirstMetal;
 import com.capstone.fxteam.metal.model.SecondMetal;
 
 import com.capstone.fxteam.metal.model.image.MicroImage;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,9 +20,13 @@ public class MetalDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class FirstMetalPostAndUpdateRequestDto {
+        @NotBlank(message = "금속명이 공백입니다.")
         private String metalName;
+        @NotBlank(message = "금속특징이 공백입니다.")
         private String metalCharacteristic;
+        @NotBlank(message = "금속분류특징이 공백입니다.")
         private String metalClassCharacteristic;
+        @NotBlank(message = "물성 순위가 공백입니다.")
         private FeatureRank featureRank;
 
         public FirstMetal toEntity() {
@@ -54,9 +59,13 @@ public class MetalDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class SecondMetalPostRequestDto {
+        @NotBlank(message = "1차 금속명이 공백입니다.")
         private String firstMetalName;
+        @NotBlank(message = "금속명이 공백입니다.")
         private String metalName;
+        @NotBlank(message = "금속특징이 공백입니다.")
         private String metalCharacteristic;
+        @NotBlank(message = "물성 순위가 공백입니다.")
         private FeatureRank featureRank;
 
         public SecondMetal toEntity(FirstMetal firstMetal) {
@@ -103,8 +112,11 @@ public class MetalDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class SecondMetalUpdateRequestDto {
+        @NotBlank(message = "금속명이 공백입니다.")
         private String metalName;
+        @NotBlank(message = "금속특징이 공백입니다.")
         private String metalCharacteristic;
+        @NotBlank(message = "물성 순위가 공백입니다.")
         private FeatureRank featureRank;
 
         public SecondMetal toEntity(FirstMetal firstMetal) {
@@ -173,8 +185,11 @@ public class MetalDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class MicroImagePostRequestDto {
+        @NotBlank(message = "2차 금속명이 공백입니다.")
         private String secondMetalName;
+        @NotBlank(message = "미세조직 이미지 제목이 공백입니다.")
         private String imageTitle;
+        @NotBlank(message = "미세조직 특징이 공백입니다.")
         private String imageCharacteristic;
 
         public MicroImage toEntity(SecondMetal secondMetal, String imageUrl) {
